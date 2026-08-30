@@ -1,0 +1,410 @@
+/**
+ * VUO CSC HELP - Image Tools Suite
+ * Image Compressor, Resizer, Converters, Cropper/Rotator, Signature Resizer & Optimizer
+ */
+
+const VUO_IMAGETOOLS = {
+  activeTab: 'compressor',
+  uploadedFiles: {},
+  cropperInstance: null,
+
+  init() {
+    this.bindEvents();
+  },
+
+  bindEvents() {
+    // Tab switcher
+    document.querySelectorAll('.img-tool-tab').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tab = e.currentTarget.getAttribute('data-tool-tab');
+        this.switchTab(tab);
+      });
+    });
+
+    // File drop & inputs for each subtool
+    this.setupDropZone('compressDropZone', 'compressFileInput', (file) => this.handleCompressFile(file));
+    this.setupDropZone('resizeDropZone', 'resizeFileInput', (file) => this.handleResizeFile(file));
+    this.setupDropZone('convertDropZone', 'convertFileInput', (file) => this.handleConvertFile(file));
+    this.setupDropZone('cropDropZone', 'cropFileInput', (file) => this.handleCropFile(file));
+    this.setupDropZone('sigDropZone', 'sigFileInput', (file) => this.handleSigFile(file));
+  },
+
+  setupDropZone(dropZoneId, fileInputId, handler) {
+    const dropZone = document.getElementById(dropZoneId);
+    const fileInput = document.getElementById(fileInputId);
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handler(e.target.files[0]);
+        }
+      });
+    }
+
+    if (dropZone) {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-sky-500', 'bg-sky-50');
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-sky-500', 'bg-sky-50');
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-sky-500', 'bg-sky-50');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handler(e.dataTransfer.files[0]);
+        }
+      });
+    }
+  },
+
+  switchTab(tabName) {
+    this.activeTab = tabName;
+    document.querySelectorAll('.img-tool-tab').forEach(btn => {
+      if (btn.getAttribute('data-tool-tab') === tabName) {
+        btn.className = 'img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-sky-600 text-white shadow-sm';
+      } else {
+        btn.className = 'img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100';
+      }
+    });
+
+    document.querySelectorAll('.img-tool-pane').forEach(pane => {
+      if (pane.id === `pane_${tabName}`) {
+        pane.classList.remove('hidden');
+      } else {
+        pane.classList.add('hidden');
+      }
+    });
+  },
+
+  // ---------------- 1. IMAGE COMPRESSOR ---------------- //
+  handleCompressFile(file) {
+    this.uploadedFiles.compress = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        document.getElementById('compressOrigImg').src = e.target.result;
+        document.getElementById('compressOrigSize').textContent = `${(file.size / 1024).toFixed(1)} KB`;
+        document.getElementById('compressOrigDim').textContent = `${img.naturalWidth} x ${img.naturalHeight} px`;
+        document.getElementById('compressWorkspace').classList.remove('hidden');
+        document.getElementById('compressDropZone').classList.add('hidden');
+        this.processCompression();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  processCompression() {
+    const file = this.uploadedFiles.compress;
+    if (!file) return;
+
+    const quality = parseFloat(document.getElementById('compressQuality').value) / 100;
+    const targetKb = parseFloat(document.getElementById('compressTargetKb').value) || 0;
+
+    const img = document.getElementById('compressOrigImg');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    let finalQuality = quality;
+    let dataUrl = canvas.toDataURL('image/jpeg', finalQuality);
+
+    // If user provided a target KB, binary search for optimal quality
+    if (targetKb > 0) {
+      let low = 0.05, high = 1.0;
+      for (let i = 0; i < 6; i++) {
+        const mid = (low + high) / 2;
+        const testUrl = canvas.toDataURL('image/jpeg', mid);
+        const testSizeKb = (testUrl.length * 3 / 4) / 1024;
+        if (testSizeKb > targetKb) {
+          high = mid;
+        } else {
+          low = mid;
+        }
+      }
+      finalQuality = low;
+      dataUrl = canvas.toDataURL('image/jpeg', finalQuality);
+    }
+
+    const compressedSizeKb = ((dataUrl.length * 3 / 4) / 1024).toFixed(1);
+    const origSizeKb = (file.size / 1024).toFixed(1);
+    const savings = Math.max(0, Math.round(((origSizeKb - compressedSizeKb) / origSizeKb) * 100));
+
+    const resultImg = document.getElementById('compressResultImg');
+    resultImg.src = dataUrl;
+    document.getElementById('compressResultSize').textContent = `${compressedSizeKb} KB`;
+    document.getElementById('compressSavings').textContent = `(-${savings}%)`;
+    this._compressedDataUrl = dataUrl;
+  },
+
+  downloadCompressed() {
+    if (!this._compressedDataUrl) return;
+    const link = document.createElement('a');
+    link.download = `VUO_Compressed_${Date.now()}.jpg`;
+    link.href = this._compressedDataUrl;
+    link.click();
+    showToast("Compressed image downloaded!", "success");
+  },
+
+  // ---------------- 2. IMAGE RESIZER ---------------- //
+  handleResizeFile(file) {
+    this.uploadedFiles.resize = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        this._resizeImg = img;
+        document.getElementById('resizeOrigDim').textContent = `${img.naturalWidth} x ${img.naturalHeight} px`;
+        document.getElementById('resizeWidth').value = img.naturalWidth;
+        document.getElementById('resizeHeight').value = img.naturalHeight;
+        document.getElementById('resizeWorkspace').classList.remove('hidden');
+        document.getElementById('resizeDropZone').classList.add('hidden');
+        this.processResize();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  onResizeDimChange(type) {
+    if (!this._resizeImg) return;
+    const maintainRatio = document.getElementById('resizeRatioLock').checked;
+    const origW = this._resizeImg.naturalWidth;
+    const origH = this._resizeImg.naturalHeight;
+    const ratio = origW / origH;
+
+    const wInput = document.getElementById('resizeWidth');
+    const hInput = document.getElementById('resizeHeight');
+
+    if (maintainRatio) {
+      if (type === 'width') {
+        hInput.value = Math.round(wInput.value / ratio);
+      } else {
+        wInput.value = Math.round(hInput.value * ratio);
+      }
+    }
+    this.processResize();
+  },
+
+  applyResizePreset(w, h) {
+    document.getElementById('resizeRatioLock').checked = false;
+    document.getElementById('resizeWidth').value = w;
+    document.getElementById('resizeHeight').value = h;
+    this.processResize();
+  },
+
+  processResize() {
+    if (!this._resizeImg) return;
+    const targetW = parseInt(document.getElementById('resizeWidth').value, 10) || 100;
+    const targetH = parseInt(document.getElementById('resizeHeight').value, 10) || 100;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(this._resizeImg, 0, 0, targetW, targetH);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+    document.getElementById('resizePreviewImg').src = dataUrl;
+    document.getElementById('resizeNewDim').textContent = `${targetW} x ${targetH} px`;
+    document.getElementById('resizeNewSize').textContent = `${((dataUrl.length * 3 / 4) / 1024).toFixed(1)} KB`;
+    this._resizedDataUrl = dataUrl;
+  },
+
+  downloadResized() {
+    if (!this._resizedDataUrl) return;
+    const link = document.createElement('a');
+    link.download = `VUO_Resized_${Date.now()}.jpg`;
+    link.href = this._resizedDataUrl;
+    link.click();
+    showToast("Resized image downloaded!", "success");
+  },
+
+  // ---------------- 3. FORMAT CONVERTER ---------------- //
+  handleConvertFile(file) {
+    this.uploadedFiles.convert = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        this._convertImg = img;
+        document.getElementById('convertOrigFormat').textContent = file.type.split('/')[1].toUpperCase();
+        document.getElementById('convertOrigSize').textContent = `${(file.size / 1024).toFixed(1)} KB`;
+        document.getElementById('convertPreviewImg').src = e.target.result;
+        document.getElementById('convertWorkspace').classList.remove('hidden');
+        document.getElementById('convertDropZone').classList.add('hidden');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  executeFormatConversion() {
+    if (!this._convertImg) return;
+    const targetFormat = document.getElementById('convertTargetFormat').value; // 'image/jpeg', 'image/png', 'image/webp'
+    const canvas = document.createElement('canvas');
+    canvas.width = this._convertImg.naturalWidth;
+    canvas.height = this._convertImg.naturalHeight;
+    const ctx = canvas.getContext('2d');
+
+    // White background for JPEG if source had transparency
+    if (targetFormat === 'image/jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.drawImage(this._convertImg, 0, 0);
+
+    const ext = targetFormat === 'image/jpeg' ? 'jpg' : targetFormat === 'image/png' ? 'png' : 'webp';
+    const dataUrl = canvas.toDataURL(targetFormat, 0.95);
+
+    const link = document.createElement('a');
+    link.download = `VUO_Converted_${Date.now()}.${ext}`;
+    link.href = dataUrl;
+    link.click();
+    showToast(`Converted to ${ext.toUpperCase()} and downloaded!`, "success");
+  },
+
+  // ---------------- 4. IMAGE CROPPER & ROTATOR ---------------- //
+  handleCropFile(file) {
+    this.uploadedFiles.crop = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.getElementById('cropTargetImg');
+      img.src = e.target.result;
+      document.getElementById('cropWorkspace').classList.remove('hidden');
+      document.getElementById('cropDropZone').classList.add('hidden');
+
+      if (this.cropperInstance) this.cropperInstance.destroy();
+      this.cropperInstance = new Cropper(img, {
+        aspectRatio: NaN, // Free crop default
+        viewMode: 1,
+        responsive: true
+      });
+    };
+    reader.readAsDataURL(file);
+  },
+
+  setCropRatio(ratio) {
+    if (!this.cropperInstance) return;
+    this.cropperInstance.setAspectRatio(ratio);
+  },
+
+  rotateCropper(deg) {
+    if (!this.cropperInstance) return;
+    this.cropperInstance.rotate(deg);
+  },
+
+  flipCropper(dir) {
+    if (!this.cropperInstance) return;
+    if (dir === 'h') {
+      this._flipH = (this._flipH || 1) * -1;
+      this.cropperInstance.scaleX(this._flipH);
+    } else {
+      this._flipV = (this._flipV || 1) * -1;
+      this.cropperInstance.scaleY(this._flipV);
+    }
+  },
+
+  downloadCropped() {
+    if (!this.cropperInstance) return;
+    const canvas = this.cropperInstance.getCroppedCanvas();
+    if (!canvas) return;
+
+    const link = document.createElement('a');
+    link.download = `VUO_Cropped_${Date.now()}.jpg`;
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.click();
+    showToast("Cropped image downloaded!", "success");
+  },
+
+  // ---------------- 5. SIGNATURE RESIZER & ENHANCER ---------------- //
+  handleSigFile(file) {
+    this.uploadedFiles.sig = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        this._sigImg = img;
+        document.getElementById('sigWorkspace').classList.remove('hidden');
+        document.getElementById('sigDropZone').classList.add('hidden');
+        this.processSignature();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  processSignature() {
+    if (!this._sigImg) return;
+    const preset = document.getElementById('sigPreset').value; // 'pan' (140x60, max 20kb), 'ssc' (140x60), 'custom'
+    const enhanceContrast = document.getElementById('sigEnhance').checked;
+
+    let targetW = 140, targetH = 60;
+    if (preset === 'standard_gov') { targetW = 200; targetH = 100; }
+    else if (preset === 'pan') { targetW = 140; targetH = 60; }
+    else if (preset === 'passport') { targetW = 140; targetH = 80; }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+
+    // Clean white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, targetW, targetH);
+
+    // Draw scaled signature centered
+    const hRatio = targetW / this._sigImg.naturalWidth;
+    const vRatio = targetH / this._sigImg.naturalHeight;
+    const ratio = Math.min(hRatio, vRatio) * 0.9;
+    const drawW = this._sigImg.naturalWidth * ratio;
+    const drawH = this._sigImg.naturalHeight * ratio;
+    const drawX = (targetW - drawW) / 2;
+    const drawY = (targetH - drawH) / 2;
+
+    ctx.drawImage(this._sigImg, drawX, drawY, drawW, drawH);
+
+    // Apply binarization / high-contrast threshold filter for clean ink
+    if (enhanceContrast) {
+      const imgData = ctx.getImageData(0, 0, targetW, targetH);
+      const data = imgData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+        
+        // Thresholding to make paper white and ink dark
+        if (gray > 180) {
+          data[i] = 255; data[i + 1] = 255; data[i + 2] = 255; // White paper
+        } else {
+          // Deepen ink color
+          data[i] = Math.max(0, data[i] - 40);
+          data[i + 1] = Math.max(0, data[i + 1] - 40);
+          data[i + 2] = Math.max(0, data[i + 2] - 40);
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    document.getElementById('sigPreviewImg').src = dataUrl;
+    const sizeKb = ((dataUrl.length * 3 / 4) / 1024).toFixed(1);
+    document.getElementById('sigResultInfo').textContent = `Size: ${targetW} x ${targetH} px | Weight: ${sizeKb} KB (Within 20KB Govt limit)`;
+    this._sigDataUrl = dataUrl;
+  },
+
+  downloadSignature() {
+    if (!this._sigDataUrl) return;
+    const link = document.createElement('a');
+    link.download = `VUO_Official_Signature_${Date.now()}.jpg`;
+    link.href = this._sigDataUrl;
+    link.click();
+    showToast("Official signature downloaded (Government Portal Compliant)!", "success");
+  }
+};

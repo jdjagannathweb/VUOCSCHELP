@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VUO CSC HELP — Digital Partner for CSC Services</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Cropper.js for Passport Photo & Image cropping -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  
+  <!-- jsPDF & html2canvas for Document & Bill PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- PDF-Lib for Client-Side PDF Merge, Split & Watermark -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  
+  <!-- QRious for Dynamic QR Code Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/custom.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            vuo: {
+              900: '#0b1e36',
+              800: '#0f2b48',
+              700: '#0369a1',
+              600: '#0284c7',
+              500: '#0ea5e9',
+              orange: '#ea580c',
+              gold: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- ==================== 1. TOP HEADER & NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-slate-700/60 shadow-lg text-white">
+    <!-- Top Micro Bar (Contact & Language) -->
+    <div class="bg-slate-950/80 px-4 py-1 border-b border-slate-800 text-[11px] flex justify-between items-center text-slate-300">
+      <div class="flex items-center gap-3">
+        <a href="tel:+919937037131" class="flex items-center gap-1 hover:text-sky-400 transition-colors"><i class="fa-solid fa-phone text-sky-400"></i> Contact: +91 9937037131</a>
+        <span class="hidden md:inline text-slate-500">|</span>
+        <a href="https://wa.me/919937037131" target="_blank" class="hidden md:inline flex items-center gap-1 hover:text-emerald-400 transition-colors"><i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp: +91 9937037131</a>
+        <span class="hidden md:inline text-slate-500">|</span>
+        <a href="mailto:jdjagannath@gmail.com" class="hidden md:inline flex items-center gap-1 hover:text-purple-300 transition-colors"><i class="fa-solid fa-envelope text-purple-400"></i> jdjagannath@gmail.com</a>
+        <span class="hidden lg:inline text-slate-500">|</span>
+        <span class="hidden lg:inline flex items-center gap-1"><i class="fa-solid fa-location-dot text-amber-400"></i> Satyabadi, Puri, Odisha</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+          <button id="langToggleEn" class="px-2.5 py-0.5 text-xs font-bold rounded bg-sky-500 text-white shadow-sm transition-all">English</button>
+          <button id="langToggleOr" class="px-2.5 py-0.5 text-xs font-semibold rounded text-slate-300 hover:text-white font-odia transition-all">ଓଡ଼ିଆ</button>
+        </div>
+        <a href="#admin" class="hover:text-sky-400 transition-colors flex items-center gap-1 font-medium">
+          <i class="fa-solid fa-lock text-[10px]"></i> <span data-i18n="nav_admin">Admin Panel</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="h-10 w-44 sm:w-52">
+            <img src="assets/logo.svg" alt="VUO CSC HELP" class="h-full w-auto object-contain">
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center space-x-5 text-sm font-medium text-slate-200">
+          <a href="#home" class="nav-link hover:text-sky-400" data-i18n="nav_home">Home</a>
+          
+          <!-- Dropdown for Tools -->
+          <div class="relative group">
+            <button class="nav-link hover:text-sky-400 flex items-center gap-1 py-2">
+              <span data-i18n="nav_tools">Tools</span>
+              <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:rotate-180 transition-transform"></i>
+            </button>
+            <div class="absolute left-0 mt-1 w-60 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 hidden group-hover:block z-50 text-slate-800 animate-fadeIn">
+              <a href="#passphoto" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-sky-600"><i class="fa-solid fa-camera"></i></span>
+                <span data-i18n="tool_passphoto_title">Pass Photo Maker</span>
+              </a>
+              <a href="#imagetools" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-sky-600"><i class="fa-solid fa-image"></i></span>
+                <span data-i18n="tool_image_title">Image Tools Suite</span>
+              </a>
+              <a href="#billmaker" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-sky-600"><i class="fa-solid fa-receipt"></i></span>
+                <span data-i18n="tool_bill_title">CSC Bill Maker</span>
+              </a>
+              <a href="#pdftools" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-sky-600"><i class="fa-solid fa-file-pdf"></i></span>
+                <span data-i18n="tool_pdf_title">PDF Tools Suite</span>
+              </a>
+              <a href="#resumemaker" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-sky-600"><i class="fa-solid fa-file-lines"></i></span>
+                <span data-i18n="tool_resume_title">Resume Maker</span>
+              </a>
+              <a href="#icardmaker" class="flex items-center gap-2.5 px-4 py-2 hover:bg-sky-50 hover:text-sky-700 text-xs font-semibold">
+                <span class="text-amber-600"><i class="fa-solid fa-id-card"></i></span>
+                <span data-i18n="tool_icard_title">I-Card Maker (VUO)</span>
+              </a>
+            </div>
+          </div>
+
+          <a href="#links" class="nav-link hover:text-sky-400" data-i18n="nav_links">Important Links</a>
+          <a href="#training" class="nav-link hover:text-sky-400" data-i18n="nav_training">Training</a>
+          <a href="#contact" class="nav-link hover:text-sky-400" data-i18n="nav_contact">Contact & Support</a>
+        </nav>
+
+        <!-- Right Side Actions: Global Search & Auth -->
+        <div class="hidden sm:flex items-center gap-3">
+          <!-- Global Search trigger button -->
+          <button onclick="VUO_SEARCH.open()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition-all">
+            <i class="fa-solid fa-magnifying-glass text-sky-400"></i>
+            <span class="hidden md:inline">Quick Search</span>
+            <kbd class="hidden md:inline px-1.5 py-0.5 text-[10px] bg-slate-900 border border-slate-600 rounded text-slate-400 font-mono">Ctrl+K</kbd>
+          </button>
+
+          <!-- Login / Member Dropdown -->
+          <div id="navLoginBtn">
+            <a href="#login" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-sm transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span data-i18n="nav_login">Member Login</span>
+            </a>
+          </div>
+
+          <div id="navUserDropdown" class="hidden relative group">
+            <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 border border-sky-500 text-xs font-semibold text-sky-300">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span id="navUserName">Member</span>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <div class="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 hidden group-hover:block z-50 text-slate-800">
+              <div class="px-4 py-2 border-b border-slate-100">
+                <p id="navUserDistrict" class="text-[11px] text-slate-500 font-semibold"></p>
+                <span class="inline-block mt-0.5 text-[10px] px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold">Active Member</span>
+              </div>
+              <a href="#dashboard" class="flex items-center gap-2 px-4 py-2 hover:bg-sky-50 text-xs font-semibold text-slate-700">
+                <i class="fa-solid fa-gauge-high text-sky-600"></i> <span data-i18n="nav_dashboard">My Dashboard</span>
+              </a>
+              <a href="#icardmaker" class="flex items-center gap-2 px-4 py-2 hover:bg-sky-50 text-xs font-semibold text-slate-700">
+                <i class="fa-solid fa-id-card text-amber-600"></i> Download My I-Card
+              </a>
+              <button onclick="VUO_AUTH.logout()" class="w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-rose-50 text-xs font-semibold text-rose-600">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="nav_logout">Logout</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Join as a VLE CTA -->
+          <a href="#signup" class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-md transition-all">
+            <i class="fa-solid fa-user-plus"></i>
+            <span data-i18n="nav_join">JOIN AS A VLE</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="flex items-center gap-2 lg:hidden">
+          <button onclick="VUO_SEARCH.open()" class="p-2 text-slate-300 hover:text-white">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <button id="mobileMenuBtn" class="p-2 text-slate-300 hover:text-white focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobileDrawer" class="hidden fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-md flex flex-col p-6 space-y-4 text-white overflow-y-auto">
+      <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+        <span class="font-black text-sky-400 text-lg">VUO CSC HELP</span>
+        <button id="closeMobileDrawer" class="text-slate-400 hover:text-white text-2xl">&times;</button>
+      </div>
+
+      <nav class="flex flex-col space-y-3 text-sm font-semibold">
+        <a href="#home" class="mobile-nav-link py-2 border-b border-slate-800/50" data-i18n="nav_home">Home</a>
+        <a href="#passphoto" class="mobile-nav-link py-2 border-b border-slate-800/50 text-sky-300"><i class="fa-solid fa-camera mr-2"></i> Pass Photo Maker</a>
+        <a href="#imagetools" class="mobile-nav-link py-2 border-b border-slate-800/50 text-sky-300"><i class="fa-solid fa-image mr-2"></i> Image Tools</a>
+        <a href="#billmaker" class="mobile-nav-link py-2 border-b border-slate-800/50 text-sky-300"><i class="fa-solid fa-receipt mr-2"></i> CSC Bill Maker</a>
+        <a href="#pdftools" class="mobile-nav-link py-2 border-b border-slate-800/50 text-sky-300"><i class="fa-solid fa-file-pdf mr-2"></i> PDF Tools</a>
+        <a href="#resumemaker" class="mobile-nav-link py-2 border-b border-slate-800/50 text-sky-300"><i class="fa-solid fa-file-lines mr-2"></i> Resume Maker</a>
+        <a href="#icardmaker" class="mobile-nav-link py-2 border-b border-slate-800/50 text-amber-300"><i class="fa-solid fa-id-card mr-2"></i> VLE I-Card Maker</a>
+        <a href="#links" class="mobile-nav-link py-2 border-b border-slate-800/50" data-i18n="nav_links">Important Links</a>
+        <a href="#training" class="mobile-nav-link py-2 border-b border-slate-800/50" data-i18n="nav_training">Training Videos</a>
+        <a href="#contact" class="mobile-nav-link py-2 border-b border-slate-800/50" data-i18n="nav_contact">Contact & Support</a>
+      </nav>
+
+      <div class="pt-4 space-y-2">
+        <a href="#login" class="mobile-nav-link block w-full py-2.5 text-center bg-sky-600 rounded-lg font-bold text-xs" data-i18n="nav_login">Member Login</a>
+        <a href="#signup" class="mobile-nav-link block w-full py-2.5 text-center bg-amber-600 rounded-lg font-bold text-xs" data-i18n="nav_join">JOIN AS A VLE (Sign Up)</a>
+        <a href="#admin" class="mobile-nav-link block w-full py-2 text-center text-slate-400 text-xs">Admin Access</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 2. BREAKING NEWS / ANNOUNCEMENT TICKER ==================== -->
+  <div class="bg-vuo-900 border-b border-slate-800 py-1.5 px-4 overflow-hidden relative flex items-center z-20">
+    <div class="flex items-center gap-1.5 bg-amber-500 text-slate-950 font-black text-[11px] px-2.5 py-0.5 rounded shadow-sm shrink-0 z-10">
+      <i class="fa-solid fa-bullhorn text-xs"></i>
+      <span>UPDATES</span>
+    </div>
+    <div class="overflow-hidden w-full ml-3">
+      <div id="newsTickerTrack" class="ticker-track">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3. MAIN CONTENT VIEWS ==================== -->
+  <main class="flex-grow">
+
+    <!-- ---------------- VIEW 1: HOMEPAGE ---------------- -->
+    <section id="view_home" class="view-container">
+      <!-- Hero Banner -->
+      <div class="relative bg-gradient-to-br from-vuo-900 via-vuo-800 to-slate-900 text-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Ambient Grid Background -->
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"></div>
+        
+        <div class="relative max-w-6xl mx-auto text-center space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+            <span data-i18n="brand_org">VUO CSC HELP</span> • Digital Assistance Portal
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl md:text-6xl font-black font-heading tracking-tight leading-tight max-w-4xl mx-auto">
+            <span class="text-white">VUO</span> <span class="text-amber-500">CSC</span> <span class="text-sky-400">HELP</span>
+            <span class="block text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-200 mt-2" data-i18n="hero_title">
+              All Essential CSC Tools & Resources in One Place
+            </span>
+          </h1>
+
+          <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed" data-i18n="hero_sub">
+            Create documents, edit photos, generate bills, convert PDFs, access important CSC links, learn through training videos and manage your VLE resources from one platform.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap justify-center gap-4 pt-4">
+            <a href="#login" class="px-6 py-3 rounded-xl font-black text-xs md:text-sm bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-xl shadow-sky-500/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span data-i18n="btn_login_member">LOGIN AS VLE MEMBER</span>
+            </a>
+            <a href="#signup" class="px-6 py-3 rounded-xl font-black text-xs md:text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-xl shadow-amber-500/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+              <i class="fa-solid fa-user-plus"></i>
+              <span data-i18n="btn_signup_new">SIGN UP AS A VLE</span>
+            </a>
+            <a href="#passphoto" class="px-5 py-3 rounded-xl font-bold text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-sky-400"></i>
+              <span data-i18n="btn_explore_tools">EXPLORE VLE TOOLS</span>
+            </a>
+          </div>
+
+          <!-- Odia Brand Message -->
+          <div class="pt-6">
+            <p class="text-amber-300 font-odia text-base sm:text-lg font-bold">
+              “ସମସ୍ତ CSC ସେବା ଓ ଡିଜିଟାଲ୍ ଟୁଲ୍ — ଗୋଟିଏ ପ୍ଲାଟଫର୍ମରେ”
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Counter Strip -->
+      <div class="bg-white border-b border-slate-200 py-6 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="p-3">
+            <p class="text-2xl md:text-3xl font-black text-sky-700 font-heading">5,200+</p>
+            <p class="text-xs text-slate-500 font-semibold mt-1" data-i18n="stat_members">Active VLE Members</p>
+          </div>
+          <div class="p-3 border-l border-slate-200">
+            <p class="text-2xl md:text-3xl font-black text-amber-600 font-heading">30 / 30</p>
+            <p class="text-xs text-slate-500 font-semibold mt-1" data-i18n="stat_districts">Districts Covered</p>
+          </div>
+          <div class="p-3 border-l-0 md:border-l border-slate-200">
+            <p class="text-2xl md:text-3xl font-black text-emerald-600 font-heading">50+</p>
+            <p class="text-xs text-slate-500 font-semibold mt-1" data-i18n="stat_tools">Digital Tools & Links</p>
+          </div>
+          <div class="p-3 border-l border-slate-200">
+            <p class="text-2xl md:text-3xl font-black text-purple-600 font-heading">150,000+</p>
+            <p class="text-xs text-slate-500 font-semibold mt-1" data-i18n="stat_docs">Documents Processed</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main 9 VLE Digital Tool Cards Grid -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading">
+            VLE Digital Assistance Toolbox
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-2">
+            Speed up your daily citizen transactions with specialized tools designed for Odisha CSC centers.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Card 1: Pass Photo Maker -->
+          <a href="#passphoto" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-4 group-hover:bg-sky-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-camera"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors font-heading" data-i18n="tool_passphoto_title">
+                Pass Photo Maker
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_passphoto_desc">
+                Create passport size photos, customize background, and generate 4, 8, 16, 32 photo A4 print sheets instantly.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-sky-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 2: Image Tools -->
+          <a href="#imagetools" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-image"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-heading" data-i18n="tool_image_title">
+                Image Tools
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_image_desc">
+                Compress, resize, crop, rotate, convert JPG/PNG, and optimize signatures for government portals.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 3: CSC Bill Maker -->
+          <a href="#billmaker" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-amber-600 transition-colors font-heading" data-i18n="tool_bill_title">
+                CSC Bill Maker
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_bill_desc">
+                Generate professional customer receipts with your shop details, CSC ID, itemized rates, and digital QR.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 4: PDF Tools Suite -->
+          <a href="#pdftools" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mb-4 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-file-pdf"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-rose-600 transition-colors font-heading" data-i18n="tool_pdf_title">
+                PDF Tools Suite
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_pdf_desc">
+                JPG to PDF, merge multiple PDFs, extract pages, split, watermark, rotate and manage documents.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 5: Resume Maker -->
+          <a href="#resumemaker" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-purple-600 transition-colors font-heading" data-i18n="tool_resume_title">
+                Resume Maker
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_resume_desc">
+                Build professional bio-data & CVs for customers with modern templates ready for A4 printing.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 6: I-Card Maker -->
+          <a href="#icardmaker" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-id-card"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors font-heading" data-i18n="tool_icard_title">
+                I-Card Maker
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_icard_desc">
+                Generate official VUO CSC HELP identity cards with dynamic QR verification and print layouts.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600">
+              <span data-i18n="btn_open_tool">Open Tool</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 7: Important Links -->
+          <a href="#links" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl mb-4 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-link"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors font-heading" data-i18n="tool_links_title">
+                Important Links
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_links_desc">
+                1-Click direct access to Central CSC portals, Odisha Government schemes, Subhadra Yojana, Banking & AEPS.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-cyan-600">
+              <span data-i18n="btn_open_tool">Open Directory</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 8: VLE Training Hub -->
+          <a href="#training" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl mb-4 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-orange-600 transition-colors font-heading" data-i18n="tool_training_title">
+                VLE Training Hub
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_training_desc">
+                Watch video tutorials on CSC services, biometric RD driver setups, DigiPay, and state schemes.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-orange-600">
+              <span data-i18n="btn_open_tool">Watch Videos</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+          <!-- Card 9: Contact & Support -->
+          <a href="#contact" class="feature-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl mb-4 group-hover:bg-teal-600 group-hover:text-white transition-all shadow-sm">
+                <i class="fa-solid fa-headset"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-teal-600 transition-colors font-heading" data-i18n="tool_help_title">
+                Contact & Support
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed" data-i18n="tool_help_desc">
+                Get instant support from VUO CSC HELP coordinators, WhatsApp (+91 9937037131), and submit queries.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-600">
+              <span data-i18n="btn_open_tool">Get Support</span>
+              <span>➔</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Odisha Flagship Schemes Banner Spotlight -->
+      <div class="bg-gradient-to-r from-sky-900 via-blue-900 to-slate-900 text-white py-12 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-center md:text-left">
+            <span class="px-2.5 py-0.5 rounded bg-amber-500 text-slate-950 font-black text-xs">ODISHA FLAGSHIP PORTALS</span>
+            <h3 class="text-2xl font-bold font-heading">Subhadra Yojana & e-District Odisha Portals</h3>
+            <p class="text-xs text-slate-300 max-w-xl">
+              Access official guidelines, photo size requirements, land RoR verification and application links directly from our curated portal.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="#links" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl text-xs font-bold shadow-lg transition-all">
+              View All Portals
+            </a>
+            <a href="#training" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-bold transition-all">
+              Watch Tutorials
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 2: MEMBER LOGIN ---------------- -->
+    <section id="view_login" class="view-container hidden py-12 px-4">
+      <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-vuo-900 text-white p-6 text-center">
+          <div class="w-12 h-12 rounded-xl bg-sky-600 mx-auto flex items-center justify-center text-xl mb-3 shadow-md">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <h2 class="text-xl font-black font-heading" data-i18n="nav_login">Login as VLE Member</h2>
+          <p class="text-xs text-sky-200 mt-1 font-odia">VUO CSC ସଦସ୍ୟ ଲଗଇନ୍</p>
+        </div>
+
+        <form id="memberLoginForm" class="p-6 space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              VUO Member Number / CSC ID / Mobile
+            </label>
+            <input type="text" id="loginIdentifier" required placeholder="e.g. VUO-2026-OD-1082 or 782910482910" 
+              class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            <p class="text-[11px] text-slate-400 mt-1">Demo Member: <code>VUO-2026-OD-1082</code></p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••" 
+              class="w-full px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            <p class="text-[11px] text-slate-400 mt-1">Demo Password: <code>123456</code></p>
+          </div>
+
+          <div class="flex items-center justify-between text-xs">
+            <label class="flex items-center gap-2 cursor-pointer text-slate-600">
+              <input type="checkbox" id="loginRemember" class="rounded text-sky-600" checked />
+              <span>Remember Me</span>
+            </label>
+            <a href="#contact" class="text-sky-600 hover:underline font-semibold">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all">
+            LOGIN TO DASHBOARD
+          </button>
+
+          <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-600">
+            <span>New Member? </span>
+            <a href="#signup" class="text-sky-600 font-bold hover:underline">Sign Up as a VLE</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 3: NEW MEMBER REGISTRATION ---------------- -->
+    <section id="view_signup" class="view-container hidden py-12 px-4">
+      <div class="max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-vuo-900 text-white p-6 text-center">
+          <h2 class="text-xl font-black font-heading" data-i18n="nav_join">Sign Up as a VLE</h2>
+          <p class="text-xs text-sky-200 mt-1">Join VUO CSC HELP & Access Digital Tools</p>
+        </div>
+
+        <form id="memberRegForm" class="p-6 sm:p-8 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+              <input type="text" id="regFullName" required placeholder="e.g. Jagannath Mohanty" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">CSC ID / VLE ID *</label>
+              <input type="text" id="regCscId" required placeholder="12-digit CSC ID" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">VUO Member Number *</label>
+              <input type="text" id="regMemberNo" required placeholder="e.g. VUO-2026-OD-3891" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number (WhatsApp) *</label>
+              <input type="tel" id="regMobile" required placeholder="9937037131" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+              <input type="email" id="regEmail" placeholder="jdjagannath@gmail.com" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">District (Odisha) *</label>
+              <select id="regDistrict" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500">
+                <!-- Populated via data.js -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Block *</label>
+              <select id="regBlock" required class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500">
+                <option value="">-- Select Block --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Gram Panchayat (GP) *</label>
+              <input type="text" id="regGp" required placeholder="Enter GP Name" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Password *</label>
+              <input type="password" id="regPassword" required placeholder="••••••••" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Confirm Password *</label>
+              <input type="password" id="regConfirmPassword" required placeholder="••••••••" 
+                class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500" />
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <label class="flex items-start gap-2 cursor-pointer text-xs text-slate-600">
+              <input type="checkbox" id="regTerms" required class="mt-0.5 rounded text-sky-600" />
+              <span>I confirm that I am a bonafide CSC VLE in Odisha and agree to abide by the guidelines of VUO CSC HELP.</span>
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black text-xs rounded-xl shadow-lg transition-all">
+            SIGN UP AS A VLE
+          </button>
+
+          <p class="text-center text-xs text-slate-500">
+            Already have an account? <a href="#login" class="text-sky-600 font-bold hover:underline">Login here</a>
+          </p>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 4: MEMBER DASHBOARD ---------------- -->
+    <section id="view_dashboard" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <!-- Member Banner Card -->
+      <div class="bg-gradient-to-r from-vuo-900 to-vuo-700 rounded-2xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30" id="dashStatusBadge">
+              Active (Verified VLE)
+            </span>
+            <span class="text-xs text-sky-200">|</span>
+            <span class="text-xs text-sky-200" id="dashDesignation">VLE Member</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black font-heading tracking-tight">
+            Welcome, <span id="dashMemberName" class="text-amber-400">Jagannath Mohanty</span>
+          </h1>
+          <p class="text-xs text-slate-300">
+            Member No: <span id="dashMemberNo" class="font-mono font-bold text-white">VUO-2026-OD-1082</span> | 
+            CSC ID: <span id="dashCscId" class="font-mono font-bold text-white">782910482910</span>
+          </p>
+          <p class="text-xs text-slate-300">
+            Location: <span id="dashGp" class="font-semibold">Satyabadi</span>, 
+            <span id="dashBlock" class="font-semibold">Satyabadi</span>, 
+            <span id="dashDistrict" class="font-semibold">Puri</span> (Odisha)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a href="#icardmaker" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+            <i class="fa-solid fa-id-card"></i>
+            <span data-i18n="dash_download_icard">Download My Official I-Card</span>
+          </a>
+          <button onclick="VUO_AUTH.logout()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-all">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Tool Shortcuts on Dashboard -->
+      <div class="mt-10">
+        <h2 class="text-lg font-black text-slate-900 font-heading mb-4" data-i18n="dash_quick_tools">
+          Quick Access Tools
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <a href="#passphoto" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-sky-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-sky-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">Pass Photo</p>
+          </a>
+          <a href="#imagetools" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-emerald-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-image"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">Image Tools</p>
+          </a>
+          <a href="#billmaker" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-receipt"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">CSC Bill</p>
+          </a>
+          <a href="#pdftools" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-rose-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">PDF Tools</p>
+          </a>
+          <a href="#resumemaker" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-purple-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">Resume</p>
+          </a>
+          <a href="#links" class="p-4 bg-white rounded-xl border border-slate-200 hover:border-cyan-500 shadow-sm text-center group transition-all">
+            <div class="w-10 h-10 rounded-lg bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-lg mb-2 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <p class="text-xs font-bold text-slate-800">Gov Links</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 5: PASS PHOTO MAKER ---------------- -->
+    <section id="view_passphoto" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold mb-1">
+            <i class="fa-solid fa-camera"></i> Passport Studio Tool
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_passphoto_title">
+            Pass Photo Maker
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="tool_passphoto_desc">
+            Crop photo, adjust background tint, and generate multiple copies on A4 sheet ready for printing.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="VUO_PASSPHOTO.loadSamplePhoto()" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 transition-all">
+            <i class="fa-solid fa-magic mr-1"></i> Try Sample Photo
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Controls Column (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Upload Box -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">1. Upload Customer Photograph</h3>
+            
+            <div id="passPhotoDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-6 text-center cursor-pointer transition-all">
+              <input type="file" id="passPhotoFileInput" accept="image/*" class="hidden" />
+              <label for="passPhotoFileInput" class="cursor-pointer block">
+                <i class="fa-solid fa-cloud-arrow-up text-3xl text-sky-600 mb-2"></i>
+                <p class="text-xs font-bold text-slate-700">Click to Upload or Drag & Drop Photo</p>
+                <p class="text-[11px] text-slate-400 mt-1">Supports JPG, PNG (Max 15MB)</p>
+              </label>
+            </div>
+
+            <!-- Cropper Canvas Container -->
+            <div id="passPhotoEditor" class="hidden space-y-3">
+              <div class="max-h-[300px] overflow-hidden bg-slate-900 rounded-xl flex items-center justify-center p-2">
+                <img id="passPhotoCropImage" class="max-w-full" />
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <button type="button" onclick="VUO_PASSPHOTO.rotate(-90)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold">
+                  <i class="fa-solid fa-rotate-left mr-1"></i> Rotate Left
+                </button>
+                <button type="button" onclick="VUO_PASSPHOTO.rotate(90)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg font-semibold">
+                  <i class="fa-solid fa-rotate-right mr-1"></i> Rotate Right
+                </button>
+                <button type="button" onclick="VUO_PASSPHOTO.resetCrop()" class="px-3 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-semibold">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adjustments & Presets Box -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">2. Dimensions & Background</h3>
+
+            <!-- Presets -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Photo Size Preset</label>
+              <select id="passPhotoPreset" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-semibold">
+                <option value="passport">Indian Passport Size (3.5 x 4.5 cm)</option>
+                <option value="stamp">Stamp Size (2.0 x 2.5 cm)</option>
+                <option value="pan">PAN Card Size (2.5 x 3.5 cm)</option>
+                <option value="aadhaar">Aadhaar / Exam Size (3.5 x 3.5 cm)</option>
+              </select>
+            </div>
+
+            <!-- Background Presets -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Background Tone Preset</label>
+              <div class="flex items-center gap-2">
+                <button type="button" class="passphoto-bg-btn w-8 h-8 rounded-full border border-slate-300 bg-white ring-2 ring-sky-500 scale-110 shadow-sm" data-color="#ffffff" title="White"></button>
+                <button type="button" class="passphoto-bg-btn w-8 h-8 rounded-full border border-slate-300 bg-[#bae6fd]" data-color="#bae6fd" title="Sky Blue"></button>
+                <button type="button" class="passphoto-bg-btn w-8 h-8 rounded-full border border-slate-300 bg-[#1e40af]" data-color="#1e40af" title="Studio Navy"></button>
+                <button type="button" class="passphoto-bg-btn w-8 h-8 rounded-full border border-slate-300 bg-[#e2e8f0]" data-color="#e2e8f0" title="Light Gray"></button>
+                <button type="button" class="passphoto-bg-btn w-8 h-8 rounded-full border border-slate-300 bg-[#dc2626]" data-color="#dc2626" title="Studio Red"></button>
+                <input type="color" id="passPhotoCustomBg" value="#ffffff" class="w-8 h-8 rounded-full border-0 p-0 cursor-pointer" title="Custom Color" />
+              </div>
+            </div>
+
+            <!-- Print Sheet Copies -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Copies on A4</label>
+                <select id="passPhotoCopies" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-bold">
+                  <option value="1">1 Single Photo</option>
+                  <option value="4">4 Copies (2x2)</option>
+                  <option value="6">6 Copies (2x3)</option>
+                  <option value="8" selected>8 Copies (2x4 Standard)</option>
+                  <option value="12">12 Copies (3x4)</option>
+                  <option value="16">16 Copies (4x4)</option>
+                  <option value="32">32 Copies (4x8 Mini)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Cutting Border</label>
+                <label class="flex items-center gap-2 mt-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                  <input type="checkbox" id="passPhotoBorder" checked class="rounded text-sky-600" />
+                  <span>Add Cutting Guide</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Brightness & Contrast -->
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+              <div class="flex justify-between text-[11px] font-semibold text-slate-600">
+                <span>Brightness</span>
+                <span id="passPhotoBrightnessVal">100%</span>
+              </div>
+              <input type="range" id="passPhotoBrightness" min="60" max="150" value="100" class="w-full accent-sky-600" />
+
+              <div class="flex justify-between text-[11px] font-semibold text-slate-600">
+                <span>Contrast</span>
+                <span id="passPhotoContrastVal">100%</span>
+              </div>
+              <input type="range" id="passPhotoContrast" min="60" max="150" value="100" class="w-full accent-sky-600" />
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Preview & Output Column (7 cols) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">3. Live Print Preview (A4 Sheet)</h3>
+              <div class="flex items-center gap-2">
+                <button onclick="VUO_PASSPHOTO.downloadSingleJpg()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition-all">
+                  <i class="fa-solid fa-download mr-1"></i> Single JPG
+                </button>
+                <button onclick="VUO_PASSPHOTO.downloadSheetJpg()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all">
+                  <i class="fa-solid fa-file-image mr-1"></i> A4 JPG
+                </button>
+                <button onclick="VUO_PASSPHOTO.downloadSheetPdf()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all">
+                  <i class="fa-solid fa-file-pdf mr-1"></i> A4 PDF
+                </button>
+                <button onclick="VUO_PASSPHOTO.printSheet()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all">
+                  <i class="fa-solid fa-print mr-1"></i> Print
+                </button>
+              </div>
+            </div>
+
+            <!-- Single Photo Mini Canvas & Sheet Container -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 rounded-xl overflow-auto max-h-[620px]">
+              
+              <div id="passPhotoEmptyNotice" class="text-center py-16 text-slate-400">
+                <i class="fa-solid fa-image text-4xl mb-2 text-slate-300"></i>
+                <p class="text-xs font-semibold">Upload customer photograph to see live A4 print preview.</p>
+              </div>
+
+              <!-- Live A4 Sheet Canvas -->
+              <canvas id="passPhotoSheetCanvas" class="passphoto-sheet max-w-full h-auto rounded border border-slate-300"></canvas>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 6: IMAGE TOOLS ---------------- -->
+    <section id="view_imagetools" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_image_title">
+          Image Tools Suite
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Compress, resize, convert formats, crop, and optimize signature images for government portals.
+        </p>
+      </div>
+
+      <!-- Sub Tool Tabs -->
+      <div class="flex flex-wrap gap-2 pb-4 border-b border-slate-200">
+        <button class="img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-sky-600 text-white shadow-sm" data-tool-tab="compressor">
+          <i class="fa-solid fa-compress"></i> Image Compressor
+        </button>
+        <button class="img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-tool-tab="resizer">
+          <i class="fa-solid fa-expand"></i> Image Resizer
+        </button>
+        <button class="img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-tool-tab="converter">
+          <i class="fa-solid fa-arrows-rotate"></i> Format Converter (JPG/PNG)
+        </button>
+        <button class="img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-tool-tab="cropper">
+          <i class="fa-solid fa-crop-simple"></i> Image Cropper & Rotator
+        </button>
+        <button class="img-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-tool-tab="signature">
+          <i class="fa-solid fa-signature"></i> Signature Resizer
+        </button>
+      </div>
+
+      <!-- 1. Compressor Pane -->
+      <div id="pane_compressor" class="img-tool-pane mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="compressDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-10 text-center cursor-pointer">
+          <input type="file" id="compressFileInput" accept="image/*" class="hidden" />
+          <label for="compressFileInput" class="cursor-pointer block">
+            <i class="fa-solid fa-file-arrow-up text-4xl text-sky-600 mb-3"></i>
+            <p class="text-sm font-bold text-slate-700">Choose Image to Compress (JPG, PNG, WebP)</p>
+            <p class="text-xs text-slate-400 mt-1">Easily reduce file size to 20KB, 50KB or 100KB for portal uploads</p>
+          </label>
+        </div>
+
+        <div id="compressWorkspace" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+              <p class="text-xs font-bold text-slate-500 uppercase mb-2">Original Image</p>
+              <img id="compressOrigImg" class="max-h-56 mx-auto rounded shadow-sm" />
+              <p class="text-xs font-bold text-slate-700 mt-2">
+                Size: <span id="compressOrigSize" class="text-rose-600">0 KB</span> | 
+                Dim: <span id="compressOrigDim">0x0</span>
+              </p>
+            </div>
+            <div class="p-4 bg-sky-50 rounded-xl border border-sky-200 text-center">
+              <p class="text-xs font-bold text-sky-800 uppercase mb-2">Compressed Result</p>
+              <img id="compressResultImg" class="max-h-56 mx-auto rounded shadow-sm" />
+              <p class="text-xs font-bold text-sky-900 mt-2">
+                Size: <span id="compressResultSize" class="text-emerald-600">0 KB</span> 
+                <span id="compressSavings" class="text-emerald-700 font-black"></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Slider & Target KB Controls -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Target Size in KB (Optional)</label>
+              <input type="number" id="compressTargetKb" placeholder="e.g. 50 (for e-District / Subhadra)" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" oninput="VUO_IMAGETOOLS.processCompression()" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Compression Quality</label>
+              <input type="range" id="compressQuality" min="5" max="95" value="70" class="w-full accent-sky-600 mt-1" oninput="VUO_IMAGETOOLS.processCompression()" />
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-2">
+            <button onclick="VUO_IMAGETOOLS.downloadCompressed()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+              <i class="fa-solid fa-download mr-1"></i> Download Compressed Image
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Resizer Pane -->
+      <div id="pane_resizer" class="img-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="resizeDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-10 text-center cursor-pointer">
+          <input type="file" id="resizeFileInput" accept="image/*" class="hidden" />
+          <label for="resizeFileInput" class="cursor-pointer block">
+            <i class="fa-solid fa-expand text-4xl text-sky-600 mb-3"></i>
+            <p class="text-sm font-bold text-slate-700">Choose Image to Resize</p>
+          </label>
+        </div>
+
+        <div id="resizeWorkspace" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+              <img id="resizePreviewImg" class="max-h-56 mx-auto rounded shadow-sm" />
+              <p class="text-xs font-bold text-slate-700 mt-2">
+                Dimensions: <span id="resizeNewDim">0x0</span> | Size: <span id="resizeNewSize">0 KB</span>
+              </p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex gap-4">
+                <div class="flex-1">
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Width (px)</label>
+                  <input type="number" id="resizeWidth" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" oninput="VUO_IMAGETOOLS.onResizeDimChange('width')" />
+                </div>
+                <div class="flex-1">
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Height (px)</label>
+                  <input type="number" id="resizeHeight" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" oninput="VUO_IMAGETOOLS.onResizeDimChange('height')" />
+                </div>
+              </div>
+
+              <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
+                <input type="checkbox" id="resizeRatioLock" checked class="rounded text-sky-600" />
+                <span>Maintain Aspect Ratio</span>
+              </label>
+
+              <!-- Quick Presets -->
+              <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500">Government Portal Presets:</p>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" onclick="VUO_IMAGETOOLS.applyResizePreset(213, 213)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded font-semibold">
+                    PAN Card (213 x 213)
+                  </button>
+                  <button type="button" onclick="VUO_IMAGETOOLS.applyResizePreset(140, 190)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded font-semibold">
+                    SSC / Odisha Gov (140 x 190)
+                  </button>
+                  <button type="button" onclick="VUO_IMAGETOOLS.applyResizePreset(140, 60)" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs rounded font-semibold">
+                    Signature (140 x 60)
+                  </button>
+                </div>
+              </div>
+
+              <button onclick="VUO_IMAGETOOLS.downloadResized()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+                Download Resized Image
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Format Converter Pane -->
+      <div id="pane_converter" class="img-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="convertDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-10 text-center cursor-pointer">
+          <input type="file" id="convertFileInput" accept="image/*" class="hidden" />
+          <label for="convertFileInput" class="cursor-pointer block">
+            <i class="fa-solid fa-arrows-rotate text-4xl text-sky-600 mb-3"></i>
+            <p class="text-sm font-bold text-slate-700">Choose Image to Convert Format</p>
+          </label>
+        </div>
+
+        <div id="convertWorkspace" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+              <img id="convertPreviewImg" class="max-h-56 mx-auto rounded shadow-sm" />
+              <p class="text-xs font-bold text-slate-700 mt-2">
+                Original Format: <span id="convertOrigFormat" class="text-sky-600"></span> | Size: <span id="convertOrigSize"></span>
+              </p>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Target Format</label>
+                <select id="convertTargetFormat" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-bold">
+                  <option value="image/jpeg">Convert to JPG (Standard Photo Format)</option>
+                  <option value="image/png">Convert to PNG (Transparent / High Quality)</option>
+                  <option value="image/webp">Convert to WebP (Web Optimized)</option>
+                </select>
+              </div>
+              <button onclick="VUO_IMAGETOOLS.executeFormatConversion()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+                Convert & Download File
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Cropper Pane -->
+      <div id="pane_cropper" class="img-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="cropDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-10 text-center cursor-pointer">
+          <input type="file" id="cropFileInput" accept="image/*" class="hidden" />
+          <label for="cropFileInput" class="cursor-pointer block">
+            <i class="fa-solid fa-crop text-4xl text-sky-600 mb-3"></i>
+            <p class="text-sm font-bold text-slate-700">Choose Image to Crop & Rotate</p>
+          </label>
+        </div>
+
+        <div id="cropWorkspace" class="hidden space-y-6">
+          <div class="max-h-[360px] overflow-hidden bg-slate-900 rounded-xl flex items-center justify-center p-2">
+            <img id="cropTargetImg" class="max-w-full" />
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="VUO_IMAGETOOLS.setCropRatio(NaN)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">Free</button>
+              <button type="button" onclick="VUO_IMAGETOOLS.setCropRatio(1)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">1:1 Square</button>
+              <button type="button" onclick="VUO_IMAGETOOLS.setCropRatio(4/3)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">4:3</button>
+              <button type="button" onclick="VUO_IMAGETOOLS.setCropRatio(16/9)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">16:9</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="VUO_IMAGETOOLS.rotateCropper(-90)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">Rotate -90°</button>
+              <button type="button" onclick="VUO_IMAGETOOLS.rotateCropper(90)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">Rotate 90°</button>
+              <button type="button" onclick="VUO_IMAGETOOLS.flipCropper('h')" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold">Flip H</button>
+            </div>
+            <button onclick="VUO_IMAGETOOLS.downloadCropped()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+              Download Cropped
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Signature Resizer Pane -->
+      <div id="pane_signature" class="img-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div id="sigDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-10 text-center cursor-pointer">
+          <input type="file" id="sigFileInput" accept="image/*" class="hidden" />
+          <label for="sigFileInput" class="cursor-pointer block">
+            <i class="fa-solid fa-signature text-4xl text-sky-600 mb-3"></i>
+            <p class="text-sm font-bold text-slate-700">Upload Signature Photo / Scan</p>
+            <p class="text-xs text-slate-400 mt-1">Removes background noise, enhances black ink, and scales to &lt;20KB</p>
+          </label>
+        </div>
+
+        <div id="sigWorkspace" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="p-6 bg-slate-100 rounded-xl border border-slate-200 text-center flex flex-col items-center justify-center">
+              <img id="sigPreviewImg" class="max-h-28 bg-white border border-slate-300 shadow-sm p-1 rounded" />
+              <p id="sigResultInfo" class="text-xs font-bold text-slate-700 mt-3"></p>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Signature Preset</label>
+                <select id="sigPreset" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-bold" onchange="VUO_IMAGETOOLS.processSignature()">
+                  <option value="pan">PAN Card Portal (140 x 60 px, Max 20 KB)</option>
+                  <option value="standard_gov">Odisha e-District / Citizen Portal (200 x 100 px)</option>
+                  <option value="passport">Passport Seva (140 x 80 px)</option>
+                </select>
+              </div>
+
+              <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                <input type="checkbox" id="sigEnhance" checked class="rounded text-sky-600" onchange="VUO_IMAGETOOLS.processSignature()" />
+                <span>Deepen Ink & Clean Paper Background</span>
+              </label>
+
+              <button onclick="VUO_IMAGETOOLS.downloadSignature()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+                Download Official Signature (Govt Portal Ready)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ---------------- VIEW 7: CSC BILL MAKER ---------------- -->
+    <section id="view_billmaker" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_bill_title">
+            CSC Bill Maker
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="tool_bill_desc">
+            Generate professional customer receipts with your shop details, CSC ID, itemized rates, and digital QR.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="billSaveShopBtn" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-sm transition-all">
+            <i class="fa-solid fa-floppy-disk mr-1"></i> Save My Shop Info
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Bill Form Inputs (6 cols) -->
+        <div class="lg:col-span-6 space-y-6">
+          
+          <!-- Shop Details Card -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">1. VLE & Shop Information</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Shop / Center Name</label>
+                <input type="text" id="billShopName" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">VLE Operator Name</label>
+                <input type="text" id="billVleName" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">CSC ID</label>
+                <input type="text" id="billCscId" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Shop Phone Number</label>
+                <input type="text" id="billShopPhone" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Shop Address</label>
+                <input type="text" id="billShopAddress" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">UPI ID for Payment QR</label>
+                <input type="text" id="billUpiId" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer & Invoice Info -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">2. Customer & Bill Info</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Customer Name</label>
+                <input type="text" id="billCustomerName" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Customer Phone</label>
+                <input type="text" id="billCustomerPhone" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Bill Number</label>
+                <input type="text" id="billNo" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Bill Date</label>
+                <input type="date" id="billDate" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Services Items List -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">3. Service Items</h3>
+              <select id="billServicePreset" class="text-xs border border-sky-300 rounded px-2 py-1 bg-sky-50 font-semibold text-sky-800">
+                <!-- Injected via billmaker.js -->
+              </select>
+            </div>
+
+            <table class="w-full text-left">
+              <thead>
+                <tr class="text-[11px] text-slate-500 font-bold border-b">
+                  <th>Service Description</th>
+                  <th class="w-20 text-center">Qty</th>
+                  <th class="w-24 text-right">Rate (₹)</th>
+                  <th class="w-24 text-right">Total</th>
+                  <th class="w-10"></th>
+                </tr>
+              </thead>
+              <tbody id="billItemsTableBody">
+                <!-- Rows injected dynamically -->
+              </tbody>
+            </table>
+
+            <button type="button" id="billAddItemBtn" class="px-3 py-1.5 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg">
+              + Add Custom Item
+            </button>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-100">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Discount (₹)</label>
+                <input type="number" id="billDiscount" value="0" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded text-right" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Tax / Fee (₹)</label>
+                <input type="number" id="billTax" value="0" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded text-right" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Payment Mode</label>
+                <select id="billPaymentMode" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded font-semibold">
+                  <option value="Cash">Cash</option>
+                  <option value="UPI / PhonePe / GPay">UPI (PhonePe/GPay)</option>
+                  <option value="AEPS / DigiPay">AEPS / DigiPay</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Status</label>
+                <select id="billPaymentStatus" class="w-full px-2 py-1.5 text-xs border border-slate-300 rounded font-bold text-emerald-700">
+                  <option value="PAID">PAID</option>
+                  <option value="UNPAID">UNPAID</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Live Print / Invoice Preview (6 cols) -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Receipt Preview</h3>
+            <div class="flex items-center gap-2">
+              <button onclick="VUO_BILLMAKER.downloadImage()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition-all">
+                <i class="fa-solid fa-image mr-1"></i> PNG
+              </button>
+              <button onclick="VUO_BILLMAKER.downloadPdf()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all">
+                <i class="fa-solid fa-file-pdf mr-1"></i> PDF
+              </button>
+              <button onclick="VUO_BILLMAKER.printBill()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all">
+                <i class="fa-solid fa-print mr-1"></i> Print Bill
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Bill Card Container -->
+          <div id="printableArea">
+            <div id="printableBillArea" class="bg-white p-6 rounded-2xl border border-slate-300 shadow-lg text-slate-800 font-sans text-xs space-y-4">
+              
+              <!-- Header -->
+              <div class="flex justify-between items-start border-b-2 border-slate-800 pb-3">
+                <div>
+                  <h2 id="prevShopName" class="text-lg font-black text-slate-900 tracking-tight">VUO CSC HELP DIGITAL SEVA KENDRA</h2>
+                  <p class="text-[11px] text-slate-600">VLE Operator: <span id="prevVleName" class="font-bold">Jagannath Mohanty</span></p>
+                  <p class="text-[11px] text-slate-600">CSC ID: <span id="prevCscId" class="font-mono font-bold text-sky-800">782910482910</span></p>
+                  <p id="prevShopAddress" class="text-[11px] text-slate-500 max-w-xs">Satyabadi, Puri, Odisha</p>
+                  <p class="text-[11px] text-slate-500">Contact: <span id="prevShopPhone">9937037131</span></p>
+                </div>
+                <div class="text-right">
+                  <div class="inline-block px-3 py-1 bg-slate-900 text-white font-black text-xs rounded mb-1">
+                    TAX INVOICE / RECEIPT
+                  </div>
+                  <p class="text-xs font-bold text-slate-700">Bill No: <span id="prevBillNo" class="font-mono text-sky-700">CSC-1001</span></p>
+                  <p class="text-[11px] text-slate-500">Date: <span id="prevBillDate"></span></p>
+                  <div class="mt-1">
+                    <span id="prevPaymentStatus" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">PAID</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Customer Info Strip -->
+              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex justify-between text-[11.5px]">
+                <div>
+                  <span class="text-slate-500">Customer: </span>
+                  <strong id="prevCustomerName" class="text-slate-900">Ramesh Chandra Das</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500">Phone: </span>
+                  <span id="prevCustomerPhone">9937037131</span>
+                </div>
+              </div>
+
+              <!-- Table -->
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-y border-slate-200">
+                    <th class="py-1.5 text-center w-8">#</th>
+                    <th class="py-1.5">Service Description</th>
+                    <th class="py-1.5 text-center w-12">Qty</th>
+                    <th class="py-1.5 text-right w-20">Rate</th>
+                    <th class="py-1.5 text-right w-20">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="prevBillItemsTbody">
+                  <!-- Items injected -->
+                </tbody>
+              </table>
+
+              <!-- Totals & Payment QR -->
+              <div class="flex justify-between items-end pt-3 border-t border-slate-200">
+                <div class="flex items-center gap-3">
+                  <canvas id="prevUpiQrCanvas" class="w-20 h-20 border border-slate-200 rounded p-1 bg-white"></canvas>
+                  <div class="text-[10.5px] text-slate-500">
+                    <p class="font-bold text-slate-800">Scan to Pay via UPI</p>
+                    <p>GooglePay / PhonePe / Paytm</p>
+                    <p>Mode: <strong id="prevPaymentMode" class="text-slate-800">Cash</strong></p>
+                  </div>
+                </div>
+
+                <div class="w-52 space-y-1 text-xs">
+                  <div class="flex justify-between text-slate-600">
+                    <span>Subtotal:</span>
+                    <span id="prevSubtotal">₹0.00</span>
+                  </div>
+                  <div class="flex justify-between text-slate-600">
+                    <span>Discount:</span>
+                    <span id="prevDiscount">₹0.00</span>
+                  </div>
+                  <div class="flex justify-between text-slate-600">
+                    <span>Tax / Fee:</span>
+                    <span id="prevTax">₹0.00</span>
+                  </div>
+                  <div class="flex justify-between font-black text-sm text-slate-900 pt-1 border-t border-slate-800">
+                    <span>Total Amount:</span>
+                    <span id="prevGrandTotal" class="text-sky-700">₹0.00</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-[10px] text-slate-500 italic pt-1 border-t border-slate-100">
+                Amount in Words: <strong id="prevTotalWords" class="text-slate-800 font-semibold"></strong>
+              </div>
+
+              <!-- Footer note & Signature -->
+              <div class="flex justify-between items-end pt-4 text-[10px] text-slate-500">
+                <div>
+                  <p id="prevNotes">Thank you for visiting our Common Services Center!</p>
+                  <p class="mt-0.5">Generated via VUO CSC HELP Digital Partner</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-28 border-b border-slate-400 mb-1"></div>
+                  <p class="font-bold text-slate-800">Authorized Signatory</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 8: PDF TOOLS SUITE ---------------- -->
+    <section id="view_pdftools" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_pdf_title">
+          PDF Tools Suite
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Convert JPG to PDF, merge multiple PDFs, extract pages, and add custom watermarks.
+        </p>
+      </div>
+
+      <!-- PDF Tabs -->
+      <div class="flex flex-wrap gap-2 pb-4 border-b border-slate-200">
+        <button class="pdf-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-sky-600 text-white shadow-sm" data-pdf-tab="imgToPdf">
+          <i class="fa-solid fa-images"></i> JPG/PNG to PDF
+        </button>
+        <button class="pdf-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-pdf-tab="mergePdf">
+          <i class="fa-solid fa-code-merge"></i> PDF Merge
+        </button>
+        <button class="pdf-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-pdf-tab="splitPdf">
+          <i class="fa-solid fa-scissors"></i> PDF Split / Page Extractor
+        </button>
+        <button class="pdf-tool-tab flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" data-pdf-tab="watermarkPdf">
+          <i class="fa-solid fa-stamp"></i> PDF Watermark
+        </button>
+      </div>
+
+      <!-- 1. JPG/PNG to PDF Pane -->
+      <div id="pdf_pane_imgToPdf" class="pdf-tool-pane mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-8 text-center cursor-pointer">
+          <input type="file" id="imgToPdfInput" accept="image/*" multiple class="hidden" />
+          <label for="imgToPdfInput" class="cursor-pointer block">
+            <i class="fa-solid fa-cloud-arrow-up text-4xl text-sky-600 mb-2"></i>
+            <p class="text-sm font-bold text-slate-700">Select Multiple Images to Combine into a Single PDF</p>
+            <p class="text-xs text-slate-400 mt-1">Supports multi-page document scans (Aadhaar, Voter, Land RoR, etc.)</p>
+          </label>
+        </div>
+
+        <div id="imgToPdfList" class="space-y-2"></div>
+
+        <div id="imgToPdfActions" class="hidden pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-4 text-xs font-bold text-slate-700">
+            <div>
+              <span>Orientation: </span>
+              <select id="imgToPdfOrientation" class="border border-slate-300 rounded px-2 py-1 font-semibold">
+                <option value="p">Portrait</option>
+                <option value="l">Landscape</option>
+              </select>
+            </div>
+            <div>
+              <span>Margin: </span>
+              <select id="imgToPdfMargin" class="border border-slate-300 rounded px-2 py-1 font-semibold">
+                <option value="none">No Margin</option>
+                <option value="small" selected>Small Margin</option>
+                <option value="normal">Normal Margin</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="VUO_PDFTOOLS.generateImagesToPdf()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+            <i class="fa-solid fa-file-pdf mr-1"></i> Generate Combined PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. PDF Merge Pane -->
+      <div id="pdf_pane_mergePdf" class="pdf-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-8 text-center cursor-pointer">
+          <input type="file" id="pdfMergeInput" accept="application/pdf" multiple class="hidden" />
+          <label for="pdfMergeInput" class="cursor-pointer block">
+            <i class="fa-solid fa-file-circle-plus text-4xl text-rose-600 mb-2"></i>
+            <p class="text-sm font-bold text-slate-700">Select PDF Files to Merge</p>
+            <p class="text-xs text-slate-400 mt-1">Combine 2 or more separate PDF documents into one single file</p>
+          </label>
+        </div>
+
+        <div id="pdfMergeList" class="space-y-2"></div>
+
+        <div id="pdfMergeActions" class="hidden pt-4 border-t border-slate-100 flex justify-end">
+          <button onclick="VUO_PDFTOOLS.executePdfMerge()" class="px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+            <i class="fa-solid fa-code-merge mr-1"></i> Merge PDFs Now
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. PDF Split Pane -->
+      <div id="pdf_pane_splitPdf" class="pdf-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div id="splitDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-8 text-center cursor-pointer">
+          <input type="file" id="pdfSplitInput" accept="application/pdf" class="hidden" />
+          <label for="pdfSplitInput" class="cursor-pointer block">
+            <i class="fa-solid fa-scissors text-4xl text-sky-600 mb-2"></i>
+            <p class="text-sm font-bold text-slate-700">Upload PDF to Extract Selected Pages</p>
+          </label>
+        </div>
+
+        <div id="splitWorkspace" class="hidden space-y-4">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+            <div>
+              <p id="splitFileName" class="font-bold text-slate-800"></p>
+              <p id="splitTotalPages" class="text-slate-500"></p>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Enter Page Numbers to Extract</label>
+            <input type="text" id="splitPageRange" placeholder="e.g. 1-3, 5" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" />
+            <p class="text-[11px] text-slate-400 mt-1">Example: <code>1-3, 5</code> will extract pages 1, 2, 3 and 5 into a new PDF document.</p>
+          </div>
+
+          <button onclick="VUO_PDFTOOLS.executePdfSplit()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+            Extract Pages & Download PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. PDF Watermark Pane -->
+      <div id="pdf_pane_watermarkPdf" class="pdf-tool-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div id="watermarkDropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-8 text-center cursor-pointer">
+          <input type="file" id="pdfWatermarkInput" accept="application/pdf" class="hidden" />
+          <label for="pdfWatermarkInput" class="cursor-pointer block">
+            <i class="fa-solid fa-stamp text-4xl text-sky-600 mb-2"></i>
+            <p class="text-sm font-bold text-slate-700">Upload PDF to Add Watermark</p>
+          </label>
+        </div>
+
+        <div id="watermarkWorkspace" class="hidden space-y-4">
+          <p id="watermarkFileName" class="text-xs font-bold text-slate-800"></p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Watermark Text</label>
+              <input type="text" id="watermarkText" value="VLE UNION ODISHA" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-bold" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Watermark Opacity</label>
+              <select id="watermarkOpacity" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg font-semibold">
+                <option value="0.2">Light (20%)</option>
+                <option value="0.35" selected>Medium (35%)</option>
+                <option value="0.6">Bold (60%)</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="VUO_PDFTOOLS.executePdfWatermark()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+            Apply Watermark & Download PDF
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ---------------- VIEW 9: RESUME MAKER ---------------- -->
+    <section id="view_resumemaker" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_resume_title">
+            Resume & Bio-Data Maker
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="tool_resume_desc">
+            Build professional bio-data & CVs for customers with modern templates ready for A4 printing.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="VUO_RESUMEMAKER.downloadPdf()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow transition-all">
+            <i class="fa-solid fa-file-pdf mr-1"></i> Download PDF
+          </button>
+          <button onclick="VUO_RESUMEMAKER.printResume()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow transition-all">
+            <i class="fa-solid fa-print mr-1"></i> Print A4
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Form Editor (6 cols) -->
+        <div class="lg:col-span-6 space-y-6">
+          
+          <!-- Template selector -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-xs font-bold text-slate-700 mb-2">Select Template:</p>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" class="resume-template-btn p-2 text-xs font-bold rounded-lg border border-slate-200 ring-2 ring-sky-500 bg-sky-50" data-template="modern">
+                Modern Cyan & Navy
+              </button>
+              <button type="button" class="resume-template-btn p-2 text-xs font-bold rounded-lg border border-slate-200" data-template="classic">
+                Classic Standard Bio-Data
+              </button>
+            </div>
+          </div>
+
+          <!-- Personal Info -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">1. Personal Information</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Full Name</label>
+                <input type="text" id="resFullName" value="Rakesh Kumar Jena" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Job Title / Role</label>
+                <input type="text" id="resJobTitle" value="Computer Operator & Citizen Associate" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Mobile Number</label>
+                <input type="text" id="resPhone" value="+91 98612 34567" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Email</label>
+                <input type="email" id="resEmail" value="rakesh.jena@email.com" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Permanent Address</label>
+                <input type="text" id="resAddress" value="At/PO: Salepur, Cuttack, Odisha - 754202" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Customer Photograph</label>
+                <input type="file" id="resPhotoInput" accept="image/*" class="text-xs" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Career Objective</label>
+                <textarea id="resObjective" rows="2" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded">Hardworking and customer-oriented professional with strong computer literacy and expertise in CSC e-governance services, seeking a challenging position.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Education -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">2. Education Credentials</h3>
+              <button type="button" id="resAddEduBtn" class="text-xs font-bold text-sky-600 hover:text-sky-800">+ Add Row</button>
+            </div>
+            <div id="resEduContainer"></div>
+          </div>
+
+          <!-- Experience -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">3. Work Experience</h3>
+              <button type="button" id="resAddExpBtn" class="text-xs font-bold text-sky-600 hover:text-sky-800">+ Add Job</button>
+            </div>
+            <div id="resExpContainer"></div>
+          </div>
+
+          <!-- Skills, Languages & Personal Details -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">4. Skills & Personal Details</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Skills (comma separated)</label>
+                <input type="text" id="resSkills" value="MS Office & Excel, Internet Portals, Odia & English Typing, Customer Assistance" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Father's Name</label>
+                <input type="text" id="resFather" value="Suresh Chandra Jena" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Date of Birth</label>
+                <input type="text" id="resDob" value="15-May-2000" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Gender</label>
+                <input type="text" id="resGender" value="Male" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Languages Known</label>
+                <input type="text" id="resLanguages" value="Odia (Native), English, Hindi" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Place</label>
+                <input type="text" id="resPlace" value="Cuttack" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Certifications</label>
+                <input type="text" id="resCertifications" value="DCA Computer Diploma, CSC Academy Certified" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Live A4 Preview (6 cols) -->
+        <div class="lg:col-span-6">
+          <div class="sticky top-20 bg-slate-100 p-4 rounded-2xl border border-slate-300 shadow-md overflow-auto max-h-[850px]">
+            <div id="resumeA4Preview" class="shadow-2xl rounded">
+              <!-- Rendered via resumemaker.js -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 10: I-CARD MAKER (VUO CSC HELP) ---------------- -->
+    <section id="view_icardmaker" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold mb-1">
+            <i class="fa-solid fa-id-card"></i> Official Member ID
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_icard_title">
+            VUO CSC HELP I-Card Maker
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Generate verifiable double-sided VLE identity cards with dynamic QR verification code and print layouts.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="VUO_ICARDMAKER.loadMyProfileIntoCard()" class="px-3.5 py-2 bg-sky-100 hover:bg-sky-200 text-sky-800 text-xs font-bold rounded-lg transition-all">
+            <i class="fa-solid fa-user-check mr-1"></i> Auto-fill My Profile
+          </button>
+          <button onclick="VUO_ICARDMAKER.downloadFullPdf()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow transition-all">
+            <i class="fa-solid fa-file-pdf mr-1"></i> Download Printable PDF
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Form Inputs (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Member Details</h3>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Member Photograph</label>
+              <input type="file" id="icardPhotoInput" accept="image/*" class="text-xs w-full" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Member Name</label>
+                <input type="text" id="icardName" value="Jagannath Mohanty" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Member Number</label>
+                <input type="text" id="icardMemberNo" value="VUO-2026-OD-1082" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded font-mono font-bold text-sky-700" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">CSC ID</label>
+                <input type="text" id="icardCscId" value="782910482910" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded font-mono font-bold" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Designation</label>
+                <input type="text" id="icardDesignation" value="VLE Coordinator" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">District</label>
+                <select id="icardDistrict" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded font-semibold"></select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Block</label>
+                <select id="icardBlock" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded font-semibold"></select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Gram Panchayat</label>
+                <input type="text" id="icardGp" value="Satyabadi" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Mobile Number</label>
+                <input type="text" id="icardMobile" value="9937037131" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Blood Group</label>
+                <input type="text" id="icardBlood" value="O+" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-0.5">Validity</label>
+                <input type="text" id="icardValidity" value="2026 - 2029" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded" />
+              </div>
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-2">
+              <button onclick="VUO_ICARDMAKER.downloadFrontPng()" class="flex-1 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-lg">
+                Download Front PNG
+              </button>
+              <button onclick="VUO_ICARDMAKER.downloadBackPng()" class="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg">
+                Download Back PNG
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Cards Preview (7 cols) -->
+        <div class="lg:col-span-7 space-y-6 flex flex-col items-center">
+          
+          <!-- FRONT CARD (Standard CR80 format: 3.370" x 2.125" / Aspect ~ 1.586) -->
+          <div id="icardFrontContainer" class="w-[380px] h-[240px] bg-gradient-to-br from-vuo-900 via-vuo-800 to-slate-900 rounded-xl p-3.5 text-white shadow-2xl relative overflow-hidden border border-sky-400/40">
+            <!-- Hologram Accent Strip -->
+            <div class="absolute top-0 right-0 w-24 h-full icard-hologram opacity-30"></div>
+            
+            <!-- Header -->
+            <div class="flex items-center gap-2 pb-2 border-b border-sky-500/40">
+              <div class="w-8 h-8 rounded bg-white p-0.5 flex items-center justify-center">
+                <img src="assets/logo.svg" class="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h4 class="text-xs font-black tracking-wider text-white">VUO CSC HELP</h4>
+                <p class="text-[9px] text-amber-400 font-bold tracking-tight">DIGITAL PARTNER • OFFICIAL IDENTITY CARD</p>
+              </div>
+            </div>
+
+            <!-- Body -->
+            <div class="flex gap-3 pt-2.5">
+              <!-- Photo -->
+              <div class="w-20 h-24 rounded-lg overflow-hidden border-2 border-amber-400 bg-slate-800 shrink-0 shadow-md">
+                <img id="cardPrevPhoto" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80" />
+              </div>
+
+              <!-- Details Grid -->
+              <div class="flex-1 space-y-0.5 text-[10px]">
+                <p class="text-xs font-black text-amber-300 truncate" id="cardPrevName">Jagannath Mohanty</p>
+                <p class="text-[9px] font-bold text-sky-300 uppercase" id="cardPrevDesignation">VLE Coordinator</p>
+                <div class="grid grid-cols-2 gap-x-1 pt-1 text-[9.5px] text-slate-200">
+                  <div>Mem No: <strong id="cardPrevMemberNo" class="text-white font-mono">VUO-1082</strong></div>
+                  <div>CSC ID: <strong id="cardPrevCscId" class="text-white font-mono">782910482910</strong></div>
+                  <div>District: <span id="cardPrevDistrict">Puri</span></div>
+                  <div>Block: <span id="cardPrevBlock">Satyabadi</span></div>
+                  <div>Blood: <strong id="cardPrevBlood" class="text-rose-400">O+</strong></div>
+                  <div>Valid: <span id="cardPrevValidity">2026-2029</span></div>
+                </div>
+              </div>
+
+              <!-- QR Code Canvas -->
+              <div class="shrink-0 flex flex-col items-center justify-center">
+                <canvas id="cardQrCanvas" class="w-14 h-14 bg-white p-0.5 rounded border border-sky-400"></canvas>
+                <span class="text-[7.5px] text-slate-300 font-mono mt-0.5">SCAN VERIFY</span>
+              </div>
+            </div>
+
+            <!-- Footer Strip -->
+            <div class="absolute bottom-1.5 left-3.5 right-3.5 flex justify-between items-center text-[8px] text-slate-400 border-t border-slate-700/50 pt-1">
+              <span>CSC Digital Seva Assistance</span>
+              <span class="font-bold text-amber-400">Verified Member</span>
+            </div>
+          </div>
+
+
+          <!-- BACK CARD -->
+          <div id="icardBackContainer" class="w-[380px] h-[240px] bg-slate-900 rounded-xl p-3.5 text-white shadow-2xl relative overflow-hidden border border-slate-700 text-[9px] flex flex-col justify-between">
+            <div>
+              <div class="text-center pb-1 border-b border-slate-700">
+                <h5 class="text-[10px] font-black text-amber-400">VUO CSC HELP — INSTRUCTIONS</h5>
+                <p class="text-[8px] text-slate-400">Registered Office: Satyabadi, Puri, Odisha - 752014</p>
+              </div>
+
+              <ul class="list-disc list-inside text-slate-300 space-y-1 mt-2 text-[8.5px] leading-tight">
+                <li>This card certifies active registration with VUO CSC HELP.</li>
+                <li>Card holder is authorized to render CSC Digital Seva services.</li>
+                <li>In case of loss or inquiry, contact +91 9937037131.</li>
+                <li>Non-transferable digital identity card.</li>
+              </ul>
+            </div>
+
+            <div class="border-t border-slate-700 pt-1.5 flex justify-between items-end text-[8px] text-slate-400">
+              <div>
+                <p><strong>Contact:</strong> +91 9937037131</p>
+                <p><strong>Email:</strong> jdjagannath@gmail.com</p>
+              </div>
+              <div class="text-right">
+                <p class="text-amber-400 font-bold">VUO CSC HELP</p>
+                <p>© 2026 Authorized Copy</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 11: IMPORTANT LINKS DIRECTORY ---------------- -->
+    <section id="view_links" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-8 text-center max-w-3xl mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_links_title">
+          Important Links Directory
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="tool_links_desc">
+          1-Click direct access to Central CSC portals, Odisha Government schemes, Subhadra Yojana, Banking & AEPS.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="mt-5 max-w-md mx-auto relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+          <input type="text" id="linksSearchInput" placeholder="Search portals e.g. Subhadra, e-District, RoR, DigiPay..." 
+            class="w-full pl-10 pr-4 py-2.5 text-xs bg-white border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+        </div>
+      </div>
+
+      <!-- Categories Filter Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <button class="link-cat-btn px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-sky-600 border border-sky-600 text-white shadow-sm transition-all" data-cat="all">
+          All Portals
+        </button>
+        <button class="link-cat-btn px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="csc">
+          CSC Central
+        </button>
+        <button class="link-cat-btn px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="gov">
+          Odisha Government
+        </button>
+        <button class="link-cat-btn px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="banking">
+          Banking & Insurance
+        </button>
+        <button class="link-cat-btn px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="vuo">
+          VUO CSC HELP
+        </button>
+      </div>
+
+      <!-- Links Grid -->
+      <div id="linksGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Injected via links.js -->
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 12: VLE TRAINING ---------------- -->
+    <section id="view_training" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-8 text-center max-w-3xl mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_training_title">
+          VLE Training Video Hub
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="tool_training_desc">
+          Watch video tutorials on CSC services, biometric RD driver setups, DigiPay, and state schemes.
+        </p>
+      </div>
+
+      <!-- Categories Filter Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <button class="training-cat-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-sky-600 border border-sky-600 text-white shadow-sm transition-all" data-cat="all">
+          All Videos
+        </button>
+        <button class="training-cat-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="Government Schemes">
+          Subhadra & Govt Schemes
+        </button>
+        <button class="training-cat-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="Technical Training">
+          Biometric & RD Driver Setup
+        </button>
+        <button class="training-cat-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="Banking">
+          DigiPay & Banking CSP
+        </button>
+        <button class="training-cat-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all" data-cat="CSC Training">
+          PAN & Central CSC
+        </button>
+      </div>
+
+      <!-- Videos Grid -->
+      <div id="trainingGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Injected via training.js -->
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 13: CONTACT & SUPPORT ---------------- -->
+    <section id="view_contact" class="view-container hidden py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-10 text-center max-w-2xl mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading" data-i18n="tool_help_title">
+          Contact & Support
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Have a question about VUO CSC HELP tools, portals or technical assistance? Get in touch with us.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Contact Info Cards (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-vuo-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
+            <h3 class="text-lg font-black font-heading text-sky-400">VUO CSC HELP</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Digital assistance portal and tools for CSC VLEs across all 30 districts of Odisha.
+            </p>
+
+            <div class="space-y-3 pt-2 text-xs">
+              <div class="flex items-start gap-3">
+                <i class="fa-solid fa-location-dot text-amber-400 mt-1"></i>
+                <p>Address: Satyabadi, Puri, Odisha - 752014</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-phone text-sky-400"></i>
+                <p>Contact: +91 9937037131</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+                <p>WhatsApp: +91 9937037131</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-envelope text-purple-400"></i>
+                <p>Email: jdjagannath@gmail.com</p>
+              </div>
+            </div>
+
+            <!-- WhatsApp Direct Button -->
+            <div class="pt-3">
+              <a href="https://wa.me/919937037131?text=Hello%20VUO%20CSC%20HELP%20Team,%20I%20need%20assistance." target="_blank" 
+                class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Direct WhatsApp Chat (+91 9937037131)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket / Contact Form (7 cols) -->
+        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="text-base font-black text-slate-900 font-heading mb-4">Submit a Support Inquiry</h3>
+
+          <form id="vuoContactForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Your Name *</label>
+                <input type="text" id="contactName" required placeholder="Jagannath Mohanty" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number *</label>
+                <input type="tel" id="contactMobile" required placeholder="9937037131" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Subject / Issue Category *</label>
+              <input type="text" id="contactSubject" required placeholder="e.g. Subhadra Portal biometric error / I-Card generation" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Detailed Message *</label>
+              <textarea id="contactMessage" rows="4" required placeholder="Explain your query or issue in detail..." class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+              Submit Ticket to VUO CSC HELP
+            </button>
+          </form>
+      </div>
+    </section>
+
+
+    <!-- ---------------- VIEW 14: ADMIN PANEL ---------------- -->
+    <section id="view_admin" class="view-container hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-1">
+            <i class="fa-solid fa-lock"></i> Authorized Admin Dashboard
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading">
+            VUO Admin Control Center
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Manage registered members, portal links, training videos, announcements and support tickets.
+          </p>
+        </div>
+        <button onclick="VUO_AUTH.adminLogout()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg transition-all">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i> Exit Admin
+        </button>
+      </div>
+
+      <!-- Admin Navigation Tabs -->
+      <div class="flex flex-wrap gap-2 pb-4 border-b border-slate-200">
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold bg-sky-600 text-white shadow-sm" data-admin-tab="members">
+          <i class="fa-solid fa-users"></i> Members (<span id="adminTotalMembersCount">0</span>)
+        </button>
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="links">
+          <i class="fa-solid fa-link"></i> Portal Links
+        </button>
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="videos">
+          <i class="fa-solid fa-video"></i> Training Videos
+        </button>
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="announcements">
+          <i class="fa-solid fa-bullhorn"></i> Announcements
+        </button>
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="tickets">
+          <i class="fa-solid fa-inbox"></i> Support Tickets
+        </button>
+      </div>
+
+      <!-- 1. Members Pane -->
+      <div id="admin_pane_members" class="admin-tab-pane mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <input type="text" id="adminMemberSearch" placeholder="Search members by name, member no, CSC ID, district..." class="px-3 py-2 text-xs border border-slate-300 rounded-lg max-w-sm" />
+          <button onclick="VUO_ADMIN.exportMembersCsv()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-sm">
+            <i class="fa-solid fa-file-csv mr-1"></i> Export Members CSV
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-b">
+                <th class="p-3">Member No</th>
+                <th class="p-3">Full Name</th>
+                <th class="p-3">CSC ID</th>
+                <th class="p-3">District / Block</th>
+                <th class="p-3">Mobile</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminMembersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2. Links Pane -->
+      <div id="admin_pane_links" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <form id="adminAddLinkForm" class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold text-slate-800">Add New Portal Link</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <input type="text" id="adminLinkTitle" placeholder="Title (English) *" required class="px-2.5 py-1.5 text-xs border rounded" />
+            <input type="text" id="adminLinkTitleOdia" placeholder="Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia" />
+            <input type="url" id="adminLinkUrl" placeholder="https://..." required class="px-2.5 py-1.5 text-xs border rounded" />
+            <select id="adminLinkCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold">
+              <option value="csc">CSC Services</option>
+              <option value="gov">Government Services (Odisha)</option>
+              <option value="banking">Banking & Insurance</option>
+              <option value="vuo">VUO CSC HELP</option>
+            </select>
+            <input type="text" id="adminLinkDesc" placeholder="Short description" class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded" />
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-600">
+              <input type="checkbox" id="adminLinkImportant" class="rounded text-amber-500" />
+              <span>Mark as ★ Important Link</span>
+            </label>
+            <button type="submit" class="px-4 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg">+ Add Link</button>
+          </div>
+        </form>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-b">
+                <th class="p-3">Title</th>
+                <th class="p-3">Odia Title</th>
+                <th class="p-3">URL</th>
+                <th class="p-3">Category</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminLinksTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. Videos Pane -->
+      <div id="admin_pane_videos" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <form id="adminAddVideoForm" class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold text-slate-800">Add New YouTube Training Tutorial</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <input type="text" id="adminVideoTitle" placeholder="Video Title *" required class="px-2.5 py-1.5 text-xs border rounded" />
+            <input type="text" id="adminVideoTitleOdia" placeholder="Video Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia" />
+            <input type="text" id="adminVideoUrl" placeholder="YouTube Video URL or ID *" required class="px-2.5 py-1.5 text-xs border rounded" />
+            <select id="adminVideoCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold">
+              <option value="Government Schemes">Subhadra & Govt Schemes</option>
+              <option value="Technical Training">Biometric & RD Driver Setup</option>
+              <option value="Banking">Banking & DigiPay</option>
+              <option value="CSC Training">CSC Central Services</option>
+              <option value="VLE Business">VLE Business & Growth</option>
+            </select>
+            <input type="text" id="adminVideoDesc" placeholder="Short description" class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded" />
+          </div>
+          <div class="flex justify-end pt-1">
+            <button type="submit" class="px-4 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg">+ Add Training Video</button>
+          </div>
+        </form>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-b">
+                <th class="p-3">Title</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">YouTube ID</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminVideosTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. Announcements Pane -->
+      <div id="admin_pane_announcements" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <form id="adminAddAnnForm" class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="text-xs font-bold text-slate-800">Publish News Ticker Announcement</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="text" id="adminAnnText" placeholder="Announcement (English) *" required class="px-2.5 py-1.5 text-xs border rounded" />
+            <input type="text" id="adminAnnTextOdia" placeholder="Announcement (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia" />
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-600">
+              <input type="checkbox" id="adminAnnUrgent" class="rounded text-rose-600" />
+              <span>Mark as Urgent Notice</span>
+            </label>
+            <button type="submit" class="px-4 py-1.5 bg-amber-600 text-white font-bold text-xs rounded-lg">Publish Live</button>
+          </div>
+        </form>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-b">
+                <th class="p-3">English Text</th>
+                <th class="p-3">Odia Text</th>
+                <th class="p-3">Type</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminAnnTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. Tickets Pane -->
+      <div id="admin_pane_tickets" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-[11px] font-bold border-b">
+                <th class="p-3">Ticket ID</th>
+                <th class="p-3">Sender Name</th>
+                <th class="p-3">Subject</th>
+                <th class="p-3">Message</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminTicketsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ==================== 4. GLOBAL SEARCH MODAL (Ctrl+K) ==================== -->
+  <div id="globalSearchModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-start justify-center pt-20 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-fadeIn">
+      <div class="p-4 border-b border-slate-200 flex items-center gap-3">
+        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+        <input type="text" id="globalSearchModalInput" data-i18n-placeholder="search_placeholder" 
+          placeholder="Search CSC services, tools, links & training videos... (Ctrl + K)" 
+          class="w-full text-sm font-medium focus:outline-none text-slate-800" />
+        <button onclick="VUO_SEARCH.close()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+
+      <div id="globalSearchResults" class="p-3 max-h-96 overflow-y-auto space-y-1">
+        <!-- Results injected via app.js -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== 5. VIDEO PLAYER MODAL ==================== -->
+  <div id="videoPlayerModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-3xl overflow-hidden text-white">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 id="videoModalTitle" class="text-sm font-bold text-sky-400 truncate pr-4">Training Video</h3>
+        <button onclick="VUO_TRAINING.closeVideoModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      </div>
+      
+      <div id="videoPlayerFrameContainer" class="p-4"></div>
+
+      <div class="px-6 pb-6 pt-2">
+        <p id="videoModalDesc" class="text-xs text-slate-300 leading-relaxed"></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== 6. ADMIN PIN LOGIN MODAL ==================== -->
+  <div id="adminLoginModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm overflow-hidden text-slate-800 p-6 space-y-4">
+      <div class="text-center">
+        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 mx-auto flex items-center justify-center text-xl mb-2">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="text-base font-black font-heading">Admin PIN Verification</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Enter secret PIN to unlock administration</p>
+      </div>
+
+      <form id="adminLoginForm" class="space-y-3">
+        <input type="password" id="adminPinInput" required placeholder="Enter Admin PIN" 
+          class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg text-center font-mono text-sm tracking-widest focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+        <p class="text-[10.5px] text-slate-400 text-center">Default PIN: <code>vuo2026admin</code></p>
+
+        <button type="submit" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg shadow transition-all">
+          Unlock Admin Panel
+        </button>
+        <button type="button" onclick="document.getElementById('adminLoginModal').classList.add('hidden'); window.location.hash='#home';" class="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-700">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==================== 7. TOAST CONTAINER ==================== -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+
+  <!-- ==================== 8. MOBILE BOTTOM APP BAR ==================== -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-vuo-900 border-t border-slate-800 text-slate-300 flex justify-around items-center py-2 px-1 mobile-bottom-bar text-[10px] font-semibold">
+    <a href="#home" class="flex flex-col items-center gap-0.5 hover:text-sky-400">
+      <i class="fa-solid fa-house text-sm"></i>
+      <span data-i18n="nav_home">Home</span>
+    </a>
+    <a href="#passphoto" class="flex flex-col items-center gap-0.5 hover:text-sky-400">
+      <i class="fa-solid fa-camera text-sm"></i>
+      <span>Pass Photo</span>
+    </a>
+    <a href="#billmaker" class="flex flex-col items-center gap-0.5 hover:text-sky-400">
+      <i class="fa-solid fa-receipt text-sm"></i>
+      <span>CSC Bill</span>
+    </a>
+    <a href="#links" class="flex flex-col items-center gap-0.5 hover:text-sky-400">
+      <i class="fa-solid fa-link text-sm"></i>
+      <span data-i18n="nav_links">Links</span>
+    </a>
+    <a href="#dashboard" class="flex flex-col items-center gap-0.5 hover:text-sky-400">
+      <i class="fa-solid fa-user text-sm"></i>
+      <span>Account</span>
+    </a>
+  </div>
+
+
+  <!-- ==================== 9. PROFESSIONAL FOOTER ==================== -->
+  <footer class="bg-vuo-900 border-t border-slate-800 text-slate-400 text-xs mt-16 pt-12 pb-16 lg:pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
+        
+        <!-- Col 1: Identity -->
+        <div class="space-y-3">
+          <div class="h-9 w-44">
+            <img src="assets/logo.svg" alt="VUO CSC HELP" class="h-full w-auto object-contain">
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed" data-i18n="brand_banner_tag">
+            All Essential CSC Tools & Resources — One Platform for Every VLE.
+          </p>
+          <p class="text-amber-400 font-odia text-xs font-semibold">
+            ସମସ୍ତ CSC ସେବା ଓ ଡିଜିଟାଲ୍ ଟୁଲ୍ — ଗୋଟିଏ ପ୍ଲାଟଫର୍ମରେ
+          </p>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="space-y-2">
+          <h4 class="text-slate-200 font-bold text-sm font-heading">Quick Links</h4>
+          <ul class="space-y-1.5">
+            <li><a href="#home" class="hover:text-sky-400 transition-colors">Home</a></li>
+            <li><a href="#passphoto" class="hover:text-sky-400 transition-colors">Pass Photo Maker</a></li>
+            <li><a href="#imagetools" class="hover:text-sky-400 transition-colors">Image Tools</a></li>
+            <li><a href="#billmaker" class="hover:text-sky-400 transition-colors">CSC Bill Maker</a></li>
+            <li><a href="#pdftools" class="hover:text-sky-400 transition-colors">PDF Tools Suite</a></li>
+            <li><a href="#resumemaker" class="hover:text-sky-400 transition-colors">Resume Maker</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Member & Organization -->
+        <div class="space-y-2">
+          <h4 class="text-slate-200 font-bold text-sm font-heading">VUO CSC HELP</h4>
+          <ul class="space-y-1.5">
+            <li><a href="#login" class="hover:text-sky-400 transition-colors">Member Login</a></li>
+            <li><a href="#signup" class="hover:text-sky-400 transition-colors">Join as a VLE (Sign Up)</a></li>
+            <li><a href="#dashboard" class="hover:text-sky-400 transition-colors">Member Dashboard</a></li>
+            <li><a href="#icardmaker" class="hover:text-sky-400 transition-colors">Digital I-Card</a></li>
+            <li><a href="#training" class="hover:text-sky-400 transition-colors">VLE Training Portal</a></li>
+            <li><a href="#contact" class="hover:text-sky-400 transition-colors">Contact & Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Contact & Support -->
+        <div class="space-y-2">
+          <h4 class="text-slate-200 font-bold text-sm font-heading">Contact & Support</h4>
+          <p class="text-[11px] text-slate-400">Satyabadi, Puri, Odisha - 752014</p>
+          <p class="text-[11px] text-slate-300 font-semibold"><a href="tel:+919937037131" class="hover:text-sky-400">📞 +91 9937037131</a></p>
+          <p class="text-[11px] text-slate-300 font-semibold"><a href="https://wa.me/919937037131" target="_blank" class="hover:text-emerald-400">💬 WhatsApp: +91 9937037131</a></p>
+          <p class="text-[11px] text-slate-300 font-semibold"><a href="mailto:jdjagannath@gmail.com" class="hover:text-purple-300">✉️ jdjagannath@gmail.com</a></p>
+        </div>
+
+      </div>
+
+      <!-- Copyright -->
+      <div class="pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
+        <p>© 2026 VUO CSC HELP. All Rights Reserved.</p>
+        <p>Built with ❤️ for every CSC VLE across 30 districts of Odisha.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== 10. JAVASCRIPT MODULES ==================== -->
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/passphoto.js"></script>
+  <script src="js/imagetools.js"></script>
+  <script src="js/billmaker.js"></script>
+  <script src="js/pdftools.js"></script>
+  <script src="js/resumemaker.js"></script>
+  <script src="js/icardmaker.js"></script>
+  <script src="js/links.js"></script>
+  <script src="js/training.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
