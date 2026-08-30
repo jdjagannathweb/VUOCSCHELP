@@ -290,12 +290,24 @@ const VUO_APP = {
     if (adminLoginForm) {
       adminLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const pin = document.getElementById('adminPinInput').value;
-        if (VUO_AUTH.adminLogin(pin)) {
-          showToast("Admin access granted.", "success");
-          window.location.hash = "#admin";
+        const passInput = document.getElementById('adminPasswordInput') || document.getElementById('adminPinInput');
+        const pass = passInput ? passInput.value : '';
+        const res = VUO_AUTH.adminLogin(pass);
+        if (res.success) {
+          const modal = document.getElementById('adminLoginModal');
+          if (modal) modal.classList.add('hidden');
+          if (passInput) passInput.value = '';
+          showToast("Admin access unlocked successfully!", "success");
+          
+          const adminView = document.getElementById('view_admin');
+          if (adminView) adminView.classList.remove('hidden');
+          VUO_ADMIN.init();
         } else {
-          showToast("Invalid Admin PIN. (Default: vuo2026admin)", "error");
+          showToast(res.message || "Invalid Admin Password. Access Denied!", "error");
+          if (passInput) {
+            passInput.value = '';
+            passInput.focus();
+          }
         }
       });
     }
@@ -347,13 +359,24 @@ const VUO_APP = {
       }
     });
 
-    // Show target view
-    const targetView = document.getElementById(`view_${viewName}`);
-    if (targetView) {
-      targetView.classList.remove('hidden');
-    } else {
+    // Show target view (With strict admin guard)
+    if (viewName === 'admin' && !VUO_AUTH.isAdmin()) {
       const homeView = document.getElementById('view_home');
       if (homeView) homeView.classList.remove('hidden');
+      const adminModal = document.getElementById('adminLoginModal');
+      if (adminModal) {
+        adminModal.classList.remove('hidden');
+        const passInput = document.getElementById('adminPasswordInput') || document.getElementById('adminPinInput');
+        if (passInput) passInput.focus();
+      }
+    } else {
+      const targetView = document.getElementById(`view_${viewName}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
+      } else {
+        const homeView = document.getElementById('view_home');
+        if (homeView) homeView.classList.remove('hidden');
+      }
     }
 
     // Scroll to top
@@ -382,10 +405,7 @@ const VUO_APP = {
     } else if (viewName === 'dashboard') {
       this.loadMemberDashboard();
     } else if (viewName === 'admin') {
-      if (!VUO_AUTH.isAdmin()) {
-        const adminModal = document.getElementById('adminLoginModal');
-        if (adminModal) adminModal.classList.remove('hidden');
-      } else {
+      if (VUO_AUTH.isAdmin()) {
         VUO_ADMIN.init();
       }
     }

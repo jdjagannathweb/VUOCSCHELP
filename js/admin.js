@@ -52,6 +52,15 @@ const VUO_ADMIN = {
         this.handleAddAnnouncement();
       });
     }
+
+    // Change Password Form
+    const changePassForm = document.getElementById('adminChangePasswordForm');
+    if (changePassForm) {
+      changePassForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleChangePassword();
+      });
+    }
   },
 
   switchTab(tabName) {
@@ -81,6 +90,7 @@ const VUO_ADMIN = {
     this.renderVideosTable();
     this.renderAnnouncementsTable();
     this.renderSupportTickets();
+    this.renderSecurityInfo();
   },
 
   // ---------------- 1. MEMBERS ---------------- //
@@ -402,6 +412,45 @@ const VUO_ADMIN = {
       localStorage.setItem('vuo_tickets', JSON.stringify(tickets));
       this.renderSupportTickets();
       showToast("Updated ticket status.", "info");
+    }
+  },
+
+  // ---------------- 6. SECURITY & PASSWORD ---------------- //
+  renderSecurityInfo() {
+    const updatedEl = document.getElementById('adminPassLastUpdated');
+    if (updatedEl) {
+      const lastUpdated = localStorage.getItem('vuo_admin_password_updated') || 'Default setup';
+      updatedEl.textContent = lastUpdated;
+    }
+  },
+
+  handleChangePassword() {
+    const currPass = document.getElementById('adminCurrentPassword').value;
+    const newPass = document.getElementById('adminNewPassword').value;
+    const confirmPass = document.getElementById('adminConfirmPassword').value;
+
+    if (!currPass || !newPass || !confirmPass) {
+      showToast("Please fill in all password fields.", "warning");
+      return;
+    }
+
+    if (newPass !== confirmPass) {
+      showToast("New passwords do not match! Please check.", "error");
+      return;
+    }
+
+    if (newPass.length < 4) {
+      showToast("New password must be at least 4 characters.", "warning");
+      return;
+    }
+
+    const res = VUO_AUTH.updateAdminPassword(currPass, newPass);
+    if (res.success) {
+      document.getElementById('adminChangePasswordForm').reset();
+      this.renderSecurityInfo();
+      showToast(res.message, "success");
+    } else {
+      showToast(res.message, "error");
     }
   }
 };

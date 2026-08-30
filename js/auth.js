@@ -103,23 +103,44 @@ const VUO_AUTH = {
     window.location.hash = "#home";
   },
 
-  // Admin PIN Authentication
+  // Admin Authentication & Password Management
   isAdmin() {
     return sessionStorage.getItem('vuo_admin_auth') === 'true';
   },
 
-  adminLogin(pin) {
-    const configuredPin = localStorage.getItem('vuo_admin_pin') || 'vuo2026admin';
-    if (pin === configuredPin) {
+  getAdminPassword() {
+    return localStorage.getItem('vuo_admin_password') || 
+           localStorage.getItem('vuo_admin_pin') || 
+           'vuo@admin2026';
+  },
+
+  adminLogin(password) {
+    const configuredPassword = this.getAdminPassword();
+    if (password && password.trim() === configuredPassword.trim()) {
       sessionStorage.setItem('vuo_admin_auth', 'true');
-      return true;
+      return { success: true };
     }
-    return false;
+    return { success: false, message: "Incorrect Admin Password. Access Denied!" };
+  },
+
+  updateAdminPassword(currentPassword, newPassword) {
+    const configuredPassword = this.getAdminPassword();
+    if (!currentPassword || currentPassword.trim() !== configuredPassword.trim()) {
+      return { success: false, message: "Current password does not match!" };
+    }
+
+    if (!newPassword || newPassword.trim().length < 4) {
+      return { success: false, message: "New password must be at least 4 characters long." };
+    }
+
+    localStorage.setItem('vuo_admin_password', newPassword.trim());
+    localStorage.setItem('vuo_admin_password_updated', new Date().toLocaleString());
+    return { success: true, message: "Admin password updated successfully! Keep it safe." };
   },
 
   adminLogout() {
     sessionStorage.removeItem('vuo_admin_auth');
-    showToast("Admin session ended.", "info");
+    showToast("Admin session ended safely.", "info");
     window.location.hash = "#home";
   },
 
