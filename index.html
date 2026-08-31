@@ -2123,25 +2123,29 @@
       <!-- 2. Links Pane -->
       <div id="admin_pane_links" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
         <form id="adminAddLinkForm" class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-          <h4 class="text-xs font-bold text-slate-800">Add New Portal Link</h4>
+          <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-sky-600"></i> Add New Portal Link
+          </h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input type="text" id="adminLinkTitle" placeholder="Title (English) *" required class="px-2.5 py-1.5 text-xs border rounded" />
-            <input type="text" id="adminLinkTitleOdia" placeholder="Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia" />
-            <input type="url" id="adminLinkUrl" placeholder="https://..." required class="px-2.5 py-1.5 text-xs border rounded" />
-            <select id="adminLinkCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold">
+            <input type="text" id="adminLinkTitle" placeholder="Title (English) *" required class="px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
+            <input type="text" id="adminLinkTitleOdia" placeholder="Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia focus:ring-1 focus:ring-sky-500" />
+            <input type="text" id="adminLinkUrl" placeholder="URL (e.g. https://odishaone.gov.in) *" required class="px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
+            <select id="adminLinkCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold focus:ring-1 focus:ring-sky-500">
               <option value="csc">CSC Services</option>
               <option value="gov">Government Services (Odisha)</option>
               <option value="banking">Banking & Insurance</option>
               <option value="vuo">VUO CSC HELP</option>
             </select>
-            <input type="text" id="adminLinkDesc" placeholder="Short description" class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded" />
+            <input type="text" id="adminLinkDesc" placeholder="Short description for VLEs" class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
           </div>
           <div class="flex items-center justify-between pt-1">
-            <label class="flex items-center gap-2 text-xs font-semibold text-slate-600">
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer">
               <input type="checkbox" id="adminLinkImportant" class="rounded text-amber-500" />
-              <span>Mark as ★ Important Link</span>
+              <span>Mark as ★ Important Link (Pin to top)</span>
             </label>
-            <button type="submit" class="px-4 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg">+ Add Link</button>
+            <button type="submit" class="px-4 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-floppy-disk"></i> Save Portal Link
+            </button>
           </div>
         </form>
 
@@ -2164,22 +2168,26 @@
       <!-- 3. Videos Pane -->
       <div id="admin_pane_videos" class="admin-tab-pane hidden mt-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
         <form id="adminAddVideoForm" class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-          <h4 class="text-xs font-bold text-slate-800">Add New YouTube Training Tutorial</h4>
+          <h4 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-video text-rose-600"></i> Add YouTube Training Tutorial
+          </h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input type="text" id="adminVideoTitle" placeholder="Video Title *" required class="px-2.5 py-1.5 text-xs border rounded" />
-            <input type="text" id="adminVideoTitleOdia" placeholder="Video Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia" />
-            <input type="text" id="adminVideoUrl" placeholder="YouTube Video URL or ID *" required class="px-2.5 py-1.5 text-xs border rounded" />
-            <select id="adminVideoCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold">
+            <input type="text" id="adminVideoTitle" placeholder="Video Title *" required class="px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
+            <input type="text" id="adminVideoTitleOdia" placeholder="Video Title (Odia)" class="px-2.5 py-1.5 text-xs border rounded font-odia focus:ring-1 focus:ring-sky-500" />
+            <input type="text" id="adminVideoUrl" placeholder="YouTube Link (e.g. https://youtu.be/... or ID) *" required class="px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
+            <select id="adminVideoCategory" class="px-2.5 py-1.5 text-xs border rounded font-semibold focus:ring-1 focus:ring-sky-500">
               <option value="Government Schemes">Subhadra & Govt Schemes</option>
               <option value="Technical Training">Biometric & RD Driver Setup</option>
               <option value="Banking">Banking & DigiPay</option>
               <option value="CSC Training">CSC Central Services</option>
               <option value="VLE Business">VLE Business & Growth</option>
             </select>
-            <input type="text" id="adminVideoDesc" placeholder="Short description" class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded" />
+            <input type="text" id="adminVideoDesc" placeholder="Tutorial description and steps..." class="sm:col-span-2 px-2.5 py-1.5 text-xs border rounded focus:ring-1 focus:ring-sky-500" />
           </div>
           <div class="flex justify-end pt-1">
-            <button type="submit" class="px-4 py-1.5 bg-sky-600 text-white font-bold text-xs rounded-lg">+ Add Training Video</button>
+            <button type="submit" class="px-4 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-upload"></i> Upload Training Video
+            </button>
           </div>
         </form>
 

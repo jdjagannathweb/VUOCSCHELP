@@ -196,17 +196,45 @@ const VUO_ADMIN = {
     `).join('');
   },
 
+  // Helper: Extract Clean YouTube Video ID from any format
+  extractYouTubeId(input) {
+    if (!input) return '';
+    const trimmed = input.trim();
+    // Raw 11-char alphanumeric ID
+    if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+      return trimmed;
+    }
+    // URLs (watch?v=, youtu.be/, embed/, shorts/, live/, etc.)
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([\w-]{11})/;
+    const match = trimmed.match(regExp);
+    if (match && match[1]) {
+      return match[1];
+    }
+    // Fallback split if standard match fails
+    if (trimmed.includes('youtu.be/')) {
+      return trimmed.split('youtu.be/')[1].split('?')[0].split('&')[0];
+    } else if (trimmed.includes('v=')) {
+      return trimmed.split('v=')[1].split('&')[0].split('?')[0];
+    }
+    return trimmed;
+  },
+
   handleAddLink() {
     const title = document.getElementById('adminLinkTitle').value.trim();
     const titleOdia = document.getElementById('adminLinkTitleOdia').value.trim();
-    const url = document.getElementById('adminLinkUrl').value.trim();
+    let url = document.getElementById('adminLinkUrl').value.trim();
     const category = document.getElementById('adminLinkCategory').value;
     const desc = document.getElementById('adminLinkDesc').value.trim();
     const important = document.getElementById('adminLinkImportant').checked;
 
     if (!title || !url) {
-      showToast("Please fill in Title and URL.", "warning");
+      showToast("Please fill in Portal Title and URL.", "warning");
       return;
+    }
+
+    // Auto-normalize web URL if user missed https://
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('#') && !url.startsWith('mailto:') && !url.startsWith('tel:')) {
+      url = 'https://' + url;
     }
 
     const catMap = {
@@ -224,25 +252,26 @@ const VUO_ADMIN = {
       url,
       category,
       categoryName: catMap[category] || "General",
-      desc,
-      important
+      desc: desc || "Official portal service for CSC VLEs.",
+      important: !!important
     };
 
     links.unshift(newLink);
-    localStorage.setItem('vuo_links', JSON.stringify(links));
+    VUO_LINKS.saveLinks(links);
     document.getElementById('adminAddLinkForm').reset();
     this.renderLinksTable();
     VUO_LINKS.renderLinks();
-    showToast("New portal link added successfully!", "success");
+    showToast("New portal link saved and published live!", "success");
   },
 
   deleteLink(linkId) {
+    if (!confirm("Are you sure you want to remove this portal link?")) return;
     let links = VUO_LINKS.getAllLinks();
     links = links.filter(l => l.id !== linkId);
-    localStorage.setItem('vuo_links', JSON.stringify(links));
+    VUO_LINKS.saveLinks(links);
     this.renderLinksTable();
     VUO_LINKS.renderLinks();
-    showToast("Link removed.", "info");
+    showToast("Portal link deleted.", "info");
   },
 
   // ---------------- 3. TRAINING VIDEOS ---------------- //
@@ -251,11 +280,20 @@ const VUO_ADMIN = {
     if (!tbody) return;
     const videos = VUO_TRAINING.getAllVideos();
 
+    if (videos.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 text-xs">No training tutorials added yet.</td></tr>`;
+      return;
+    }
+
     tbody.innerHTML = videos.map(v => `
       <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
         <td class="p-3 font-semibold text-slate-800">${v.title}</td>
         <td class="p-3"><span class="px-2 py-0.5 bg-sky-100 text-sky-800 rounded font-semibold text-[10px]">${v.category}</span></td>
-        <td class="p-3 font-mono text-[11px] text-slate-500">${v.youtubeId}</td>
+        <td class="p-3 font-mono text-[11px] text-sky-700">
+          <a href="https://www.youtube.com/watch?v=${v.youtubeId}" target="_blank" class="hover:underline flex items-center gap-1">
+            <i class="fa-brands fa-youtube text-rose-600"></i> ${v.youtubeId}
+          </a>
+        </td>
         <td class="p-3 text-right">
           <button onclick="VUO_ADMIN.deleteVideo('${v.id}')" class="text-rose-500 hover:text-rose-700 font-bold text-[11px]">
             Delete
@@ -268,21 +306,19 @@ const VUO_ADMIN = {
   handleAddVideo() {
     const title = document.getElementById('adminVideoTitle').value.trim();
     const titleOdia = document.getElementById('adminVideoTitleOdia').value.trim();
-    const youtubeUrl = document.getElementById('adminVideoUrl').value.trim();
+    const youtubeInput = document.getElementById('adminVideoUrl').value.trim();
     const category = document.getElementById('adminVideoCategory').value;
     const desc = document.getElementById('adminVideoDesc').value.trim();
 
-    if (!title || !youtubeUrl) {
-      showToast("Please fill in Video Title and YouTube Link.", "warning");
+    if (!title || !youtubeInput) {
+      showToast("Please fill in Video Title and YouTube Link or ID.", "warning");
       return;
     }
 
-    // Extract YouTube ID
-    let ytId = youtubeUrl;
-    if (youtubeUrl.includes('youtu.be/')) {
-      ytId = youtubeUrl.split('youtu.be/')[1].split('?')[0];
-    } else if (youtubeUrl.includes('v=')) {
-      ytId = youtubeUrl.split('v=')[1].split('&')[0];
+    const ytId = this.extractYouTubeId(youtubeInput);
+    if (!ytId) {
+      showToast("Could not extract a valid YouTube video ID.", "error");
+      return;
     }
 
     const videos = VUO_TRAINING.getAllVideos();
@@ -292,23 +328,24 @@ const VUO_ADMIN = {
       titleOdia,
       category,
       youtubeId: ytId,
-      desc,
+      desc: desc || "CSC VLE practical step-by-step training tutorial.",
       duration: "10:00 min",
-      views: "1.2K"
+      views: "1.0K"
     };
 
     videos.unshift(newVideo);
-    localStorage.setItem('vuo_training', JSON.stringify(videos));
+    VUO_TRAINING.saveVideos(videos);
     document.getElementById('adminAddVideoForm').reset();
     this.renderVideosTable();
     VUO_TRAINING.renderVideos();
-    showToast("Training video added successfully!", "success");
+    showToast("Training video tutorial added and published live!", "success");
   },
 
   deleteVideo(vidId) {
+    if (!confirm("Are you sure you want to remove this training video?")) return;
     let videos = VUO_TRAINING.getAllVideos();
     videos = videos.filter(v => v.id !== vidId);
-    localStorage.setItem('vuo_training', JSON.stringify(videos));
+    VUO_TRAINING.saveVideos(videos);
     this.renderVideosTable();
     VUO_TRAINING.renderVideos();
     showToast("Training video deleted.", "info");

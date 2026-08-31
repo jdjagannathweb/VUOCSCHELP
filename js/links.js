@@ -49,6 +49,16 @@ const VUO_LINKS = {
     }
   },
 
+  saveLinks(links) {
+    try {
+      localStorage.setItem('vuo_links', JSON.stringify(links));
+      return true;
+    } catch (e) {
+      console.error("Error saving links to storage:", e);
+      return false;
+    }
+  },
+
   renderLinks() {
     const container = document.getElementById('linksGridContainer');
     if (!container) return;

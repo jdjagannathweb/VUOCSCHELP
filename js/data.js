@@ -419,12 +419,20 @@ const VUO_DATA = {
   ]
 };
 
-// Initialize LocalStorage Data Store
+// Initialize LocalStorage Data Store (Only populate defaults if not already present)
 function initVuoStore() {
-  localStorage.setItem('vuo_members', JSON.stringify(VUO_DATA.sampleMembers));
-  localStorage.setItem('vuo_links', JSON.stringify(VUO_DATA.links));
-  localStorage.setItem('vuo_training', JSON.stringify(VUO_DATA.trainingVideos));
-  localStorage.setItem('vuo_announcements', JSON.stringify(VUO_DATA.announcements));
+  if (!localStorage.getItem('vuo_members')) {
+    localStorage.setItem('vuo_members', JSON.stringify(VUO_DATA.sampleMembers));
+  }
+  if (!localStorage.getItem('vuo_links')) {
+    localStorage.setItem('vuo_links', JSON.stringify(VUO_DATA.links));
+  }
+  if (!localStorage.getItem('vuo_training')) {
+    localStorage.setItem('vuo_training', JSON.stringify(VUO_DATA.trainingVideos));
+  }
+  if (!localStorage.getItem('vuo_announcements')) {
+    localStorage.setItem('vuo_announcements', JSON.stringify(VUO_DATA.announcements));
+  }
   if (!localStorage.getItem('vuo_tickets')) {
     localStorage.setItem('vuo_tickets', JSON.stringify([]));
   }

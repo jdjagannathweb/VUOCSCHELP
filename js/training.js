@@ -39,6 +39,16 @@ const VUO_TRAINING = {
     }
   },
 
+  saveVideos(videos) {
+    try {
+      localStorage.setItem('vuo_training', JSON.stringify(videos));
+      return true;
+    } catch (e) {
+      console.error("Error saving training videos to storage:", e);
+      return false;
+    }
+  },
+
   renderVideos() {
     const container = document.getElementById('trainingGridContainer');
     if (!container) return;
