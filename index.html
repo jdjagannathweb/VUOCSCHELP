@@ -2091,6 +2091,9 @@
         <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="security">
           <i class="fa-solid fa-shield-halved"></i> Security & Password
         </button>
+        <button class="admin-nav-btn flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100" data-admin-tab="firebase">
+          <i class="fa-solid fa-fire text-amber-500"></i> Firebase Cloud Sync
+        </button>
       </div>
 
       <!-- 1. Members Pane -->
@@ -2328,6 +2331,101 @@
         </form>
       </div>
 
+      <!-- 7. Firebase Cloud Sync Pane -->
+      <div id="admin_pane_firebase" class="admin-tab-pane hidden mt-6 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6 max-w-4xl">
+        <div class="flex items-center gap-3 pb-4 border-b border-slate-200">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-cloud"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900 font-heading">Google Firebase Realtime Cloud Database</h3>
+            <p class="text-xs text-slate-500">Live sync across all devices — when you update links, training videos, or news, it updates everywhere worldwide.</p>
+          </div>
+        </div>
+
+        <!-- Connection Status Card -->
+        <div id="firebaseStatusCard" class="p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 border-slate-200">
+          <div class="flex items-center gap-3">
+            <div id="firebaseStatusDot" class="w-3.5 h-3.5 rounded-full bg-amber-500 animate-pulse"></div>
+            <div>
+              <p class="text-xs font-bold text-slate-800" id="firebaseStatusTitle">Checking Cloud Database Connection...</p>
+              <p class="text-[11px] text-slate-500" id="firebaseStatusDesc">Connect your free Google Firebase project to enable public live synchronization.</p>
+            </div>
+          </div>
+          <button type="button" onclick="VUO_ADMIN.syncLocalToCloud()" id="btnSyncCloud" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Push Local Data to Cloud</span>
+          </button>
+        </div>
+
+        <!-- Firebase Config Setup Form -->
+        <form id="adminFirebaseConfigForm" class="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-key text-amber-600"></i>
+              <span>Firebase Project Configuration (100% Free)</span>
+            </h4>
+            <a href="https://console.firebase.google.com/" target="_blank" class="text-xs text-sky-600 hover:underline font-semibold flex items-center gap-1">
+              <span>Open Firebase Console</span>
+              <i class="fa-solid fa-external-link text-[10px]"></i>
+            </a>
+          </div>
+
+          <p class="text-[11.5px] text-slate-600 leading-relaxed">
+            Create a free project at <a href="https://console.firebase.google.com/" target="_blank" class="text-sky-600 font-bold underline">console.firebase.google.com</a>, create a <strong>Firestore Database (test mode)</strong>, and paste your Web App credentials below:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">API Key (apiKey) *</label>
+              <input type="text" id="fbApiKey" placeholder="AIzaSy..." required class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Project ID (projectId) *</label>
+              <input type="text" id="fbProjectId" placeholder="vuo-csc-help" required class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Auth Domain (authDomain)</label>
+              <input type="text" id="fbAuthDomain" placeholder="vuo-csc-help.firebaseapp.com" class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Storage Bucket (storageBucket)</label>
+              <input type="text" id="fbStorageBucket" placeholder="vuo-csc-help.appspot.com" class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Messaging Sender ID (messagingSenderId)</label>
+              <input type="text" id="fbMessagingSenderId" placeholder="1029384756" class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">App ID (appId)</label>
+              <input type="text" id="fbAppId" placeholder="1:1029384756:web:abcd123" class="w-full px-3 py-2 text-xs border rounded-lg font-mono focus:ring-1 focus:ring-amber-500" />
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button type="submit" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
+              <i class="fa-solid fa-plug"></i>
+              <span>Save & Connect Firebase Cloud</span>
+            </button>
+            <button type="button" onclick="VUO_ADMIN.testFirebaseConnection()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition-all">
+              Test Connection
+            </button>
+          </div>
+        </form>
+
+        <!-- Quick 3-Step Setup Guide Accordion -->
+        <div class="p-4 bg-amber-50/60 rounded-xl border border-amber-200 text-xs text-amber-950 space-y-2">
+          <p class="font-bold flex items-center gap-1.5 text-amber-900">
+            <i class="fa-solid fa-lightbulb text-amber-600"></i> 1-Minute Free Setup Guide:
+          </p>
+          <ol class="list-decimal list-inside space-y-1 text-slate-700 text-[11.5px] leading-relaxed">
+            <li>Open <a href="https://console.firebase.google.com/" target="_blank" class="text-sky-600 font-bold underline">Firebase Console</a> and click <strong>"Create a project"</strong> (Name it <code>vuo-csc-help</code>).</li>
+            <li>Click on <strong>"Build -> Firestore Database"</strong> -> Click <strong>"Create Database"</strong> -> Select <strong>"Start in test mode"</strong>.</li>
+            <li>Click on the <strong>Web Icon (&lt;/&gt;)</strong> in Project Overview to create a Web App, then copy & paste the config keys above!</li>
+          </ol>
+        </div>
+      </div>
+
     </section>
 
   </main>
@@ -2493,7 +2591,12 @@
     </div>
   </footer>
 
-  <!-- ==================== 10. JAVASCRIPT MODULES ==================== -->
+  <!-- ==================== 10. JAVASCRIPT MODULES & FIREBASE ==================== -->
+  <!-- Firebase SDKs (v10 Compat for Client-Side Firestore Cloud Database) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-db.js"></script>
+
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/auth.js"></script>

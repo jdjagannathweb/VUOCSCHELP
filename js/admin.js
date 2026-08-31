@@ -61,6 +61,15 @@ const VUO_ADMIN = {
         this.handleChangePassword();
       });
     }
+
+    // Firebase Config Form
+    const fbForm = document.getElementById('adminFirebaseConfigForm');
+    if (fbForm) {
+      fbForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleSaveFirebaseConfig();
+      });
+    }
   },
 
   switchTab(tabName) {
@@ -91,6 +100,7 @@ const VUO_ADMIN = {
     this.renderAnnouncementsTable();
     this.renderSupportTickets();
     this.renderSecurityInfo();
+    this.renderFirebaseStatus();
   },
 
   // ---------------- 1. MEMBERS ---------------- //
@@ -153,6 +163,9 @@ const VUO_ADMIN = {
     let members = VUO_AUTH.getAllMembers();
     members = members.filter(m => m.memberNo !== memberNo);
     VUO_AUTH.saveMembers(members);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudDeleteMember(memberNo);
+    }
     this.renderMembers();
     showToast("Member deleted.", "info");
   },
@@ -258,6 +271,9 @@ const VUO_ADMIN = {
 
     links.unshift(newLink);
     VUO_LINKS.saveLinks(links);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudSaveLink(newLink);
+    }
     document.getElementById('adminAddLinkForm').reset();
     this.renderLinksTable();
     VUO_LINKS.renderLinks();
@@ -269,6 +285,9 @@ const VUO_ADMIN = {
     let links = VUO_LINKS.getAllLinks();
     links = links.filter(l => l.id !== linkId);
     VUO_LINKS.saveLinks(links);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudDeleteLink(linkId);
+    }
     this.renderLinksTable();
     VUO_LINKS.renderLinks();
     showToast("Portal link deleted.", "info");
@@ -335,6 +354,9 @@ const VUO_ADMIN = {
 
     videos.unshift(newVideo);
     VUO_TRAINING.saveVideos(videos);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudSaveVideo(newVideo);
+    }
     document.getElementById('adminAddVideoForm').reset();
     this.renderVideosTable();
     VUO_TRAINING.renderVideos();
@@ -346,6 +368,9 @@ const VUO_ADMIN = {
     let videos = VUO_TRAINING.getAllVideos();
     videos = videos.filter(v => v.id !== vidId);
     VUO_TRAINING.saveVideos(videos);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudDeleteVideo(vidId);
+    }
     this.renderVideosTable();
     VUO_TRAINING.renderVideos();
     showToast("Training video deleted.", "info");
@@ -396,6 +421,9 @@ const VUO_ADMIN = {
 
     anns.unshift(newAnn);
     localStorage.setItem('vuo_announcements', JSON.stringify(anns));
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudSaveAnnouncement(newAnn);
+    }
     document.getElementById('adminAddAnnForm').reset();
     this.renderAnnouncementsTable();
     renderAnnouncementsTicker();
@@ -406,6 +434,9 @@ const VUO_ADMIN = {
     let anns = JSON.parse(localStorage.getItem('vuo_announcements') || '[]');
     anns = anns.filter(a => a.id !== annId);
     localStorage.setItem('vuo_announcements', JSON.stringify(anns));
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudDeleteAnnouncement(annId);
+    }
     this.renderAnnouncementsTable();
     renderAnnouncementsTicker();
     showToast("Announcement removed.", "info");
@@ -488,6 +519,101 @@ const VUO_ADMIN = {
       showToast(res.message, "success");
     } else {
       showToast(res.message, "error");
+    }
+  },
+
+  // ---------------- 7. FIREBASE CLOUD SYNC ---------------- //
+  renderFirebaseStatus() {
+    const card = document.getElementById('firebaseStatusCard');
+    const dot = document.getElementById('firebaseStatusDot');
+    const title = document.getElementById('firebaseStatusTitle');
+    const desc = document.getElementById('firebaseStatusDesc');
+
+    if (!card || !title) return;
+
+    // Pre-fill inputs if saved
+    if (typeof VUO_DB !== 'undefined') {
+      const cfg = VUO_DB.getSavedConfig();
+      if (document.getElementById('fbApiKey')) document.getElementById('fbApiKey').value = cfg.apiKey || '';
+      if (document.getElementById('fbProjectId')) document.getElementById('fbProjectId').value = cfg.projectId || '';
+      if (document.getElementById('fbAuthDomain')) document.getElementById('fbAuthDomain').value = cfg.authDomain || '';
+      if (document.getElementById('fbStorageBucket')) document.getElementById('fbStorageBucket').value = cfg.storageBucket || '';
+      if (document.getElementById('fbMessagingSenderId')) document.getElementById('fbMessagingSenderId').value = cfg.messagingSenderId || '';
+      if (document.getElementById('fbAppId')) document.getElementById('fbAppId').value = cfg.appId || '';
+
+      if (VUO_DB.isInitialized) {
+        card.className = "p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-emerald-50/80 border-emerald-200 text-emerald-950";
+        dot.className = "w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm";
+        title.textContent = `🟢 Connected to Firebase Cloud (${cfg.projectId})`;
+        desc.textContent = "Real-time synchronization is ACTIVE. All link, video & announcement updates broadcast live to all public users!";
+      } else {
+        card.className = "p-5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50 border-slate-200 text-slate-800";
+        dot.className = "w-3.5 h-3.5 rounded-full bg-amber-500 animate-pulse";
+        title.textContent = "🟡 LocalStorage Mode (Cloud Sync Pending)";
+        desc.textContent = "Enter your free Firebase credentials below to enable live cloud synchronization worldwide.";
+      }
+    }
+  },
+
+  handleSaveFirebaseConfig() {
+    const apiKey = document.getElementById('fbApiKey').value.trim();
+    const projectId = document.getElementById('fbProjectId').value.trim();
+    const authDomain = document.getElementById('fbAuthDomain').value.trim();
+    const storageBucket = document.getElementById('fbStorageBucket').value.trim();
+    const messagingSenderId = document.getElementById('fbMessagingSenderId').value.trim();
+    const appId = document.getElementById('fbAppId').value.trim();
+
+    if (!apiKey || !projectId) {
+      showToast("Please enter at least API Key and Project ID.", "warning");
+      return;
+    }
+
+    const configObj = {
+      apiKey,
+      projectId,
+      authDomain: authDomain || `${projectId}.firebaseapp.com`,
+      storageBucket: storageBucket || `${projectId}.appspot.com`,
+      messagingSenderId,
+      appId
+    };
+
+    const res = VUO_DB.saveConfig(configObj);
+    if (res.success) {
+      this.renderFirebaseStatus();
+      showToast("Firebase Cloud Config saved! Testing connection...", "success");
+      setTimeout(() => this.testFirebaseConnection(), 500);
+    } else {
+      showToast("Error saving config: " + res.message, "error");
+    }
+  },
+
+  async testFirebaseConnection() {
+    if (!VUO_DB.isConfigured()) {
+      showToast("Please enter Firebase config first.", "warning");
+      return;
+    }
+    showToast("Connecting to Google Firestore...", "info");
+    VUO_DB.init();
+    if (VUO_DB.isInitialized) {
+      this.renderFirebaseStatus();
+      showToast("🎉 Successfully connected to Google Firebase Cloud Database!", "success");
+    } else {
+      showToast("Connection failed. Please verify API Key & Project ID in Firebase console.", "error");
+    }
+  },
+
+  async syncLocalToCloud() {
+    if (!VUO_DB.isInitialized) {
+      showToast("Please connect Firebase first before pushing data.", "warning");
+      return;
+    }
+
+    showToast("Pushing local data to Firebase Cloud...", "info");
+    try {
+      await VUO_DB.seedCloudDefaults();
+      showToast("✅ All Links, Videos & News successfully synced to Cloud!", "success");
+    } catch (e) {
+      showToast("Sync error: " + e.message, "error");
     }
   }
 };

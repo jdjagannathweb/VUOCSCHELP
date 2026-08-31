@@ -68,6 +68,9 @@ const VUO_AUTH = {
 
     members.unshift(newMember);
     this.saveMembers(members);
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.cloudSaveMember(newMember);
+    }
     this.setCurrentUser(newMember);
 
     return { success: true, member: newMember };

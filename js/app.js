@@ -178,7 +178,10 @@ const VUO_APP = {
     this.handleRoute();
     window.addEventListener('hashchange', () => this.handleRoute());
 
-    // Initialize Submodules
+    // Initialize Submodules & Firebase Cloud DB
+    if (typeof VUO_DB !== 'undefined') {
+      VUO_DB.init();
+    }
     VUO_SEARCH.init();
     renderAnnouncementsTicker();
     VUO_AUTH.updateAuthUI();
@@ -323,8 +326,7 @@ const VUO_APP = {
         const subject = document.getElementById('contactSubject').value;
         const message = document.getElementById('contactMessage').value;
 
-        const tickets = JSON.parse(localStorage.getItem('vuo_tickets') || '[]');
-        tickets.unshift({
+        const newTicket = {
           ticketId,
           name,
           mobile,
@@ -332,8 +334,14 @@ const VUO_APP = {
           message,
           date: new Date().toLocaleDateString(),
           status: 'Pending'
-        });
+        };
+
+        const tickets = JSON.parse(localStorage.getItem('vuo_tickets') || '[]');
+        tickets.unshift(newTicket);
         localStorage.setItem('vuo_tickets', JSON.stringify(tickets));
+        if (typeof VUO_DB !== 'undefined') {
+          VUO_DB.cloudSaveTicket(newTicket);
+        }
 
         contactForm.reset();
         showToast(`Your support ticket #${ticketId} has been registered! Our VUO CSC HELP team will reach out at 9937037131 soon.`, "success");
