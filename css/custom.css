@@ -106,6 +106,19 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   background-color: #ffffff;
   border: 1px solid #cbd5e1;
+  max-height: 520px;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  transition: max-height 0.2s ease, width 0.2s ease;
+}
+
+.passphoto-sheet.zoom-actual {
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 1240px !important;
 }
 
 /* I-Card Hologram & Ribbon */
@@ -125,28 +138,34 @@ body {
   }
   
   /* Print Specific Containers */
-  #printableArea, #printableArea * {
+  #printableArea, #printableArea *,
+  .printable-content, .printable-content * {
     visibility: visible;
   }
   
-  #printableArea {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+  #printableArea, .printable-content {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
+    overflow: visible !important;
   }
 
   @page {
-    size: auto;
-    margin: 6mm;
+    size: A4 portrait;
+    margin: 8mm;
   }
 
   .no-print {
     display: none !important;
+  }
+
+  .page-break-avoid, .resume-section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 }
 

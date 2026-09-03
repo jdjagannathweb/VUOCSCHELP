@@ -236,13 +236,13 @@ const VUO_RESUMEMAKER = {
             </div>
 
             <!-- Objective -->
-            <div class="mt-4">
+            <div class="mt-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
               <h2 class="text-xs font-black uppercase text-sky-800 tracking-wider bg-sky-50 px-2 py-1 rounded border-l-4 border-sky-600">Career Objective</h2>
               <p class="mt-2 text-slate-700 leading-relaxed text-[11.5px]">${objective}</p>
             </div>
 
             <!-- Education -->
-            <div class="mt-4">
+            <div class="mt-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
               <h2 class="text-xs font-black uppercase text-sky-800 tracking-wider bg-sky-50 px-2 py-1 rounded border-l-4 border-sky-600">Educational Qualification</h2>
               <table class="w-full mt-2 text-left border-collapse">
                 <thead>
@@ -268,11 +268,11 @@ const VUO_RESUMEMAKER = {
 
             <!-- Experience -->
             ${this.experiences.length > 0 ? `
-              <div class="mt-4">
+              <div class="mt-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
                 <h2 class="text-xs font-black uppercase text-sky-800 tracking-wider bg-sky-50 px-2 py-1 rounded border-l-4 border-sky-600">Work Experience</h2>
                 <div class="mt-2 space-y-2">
                   ${this.experiences.map(exp => `
-                    <div class="border-l-2 border-slate-300 pl-3">
+                    <div class="border-l-2 border-slate-300 pl-3 mb-2">
                       <div class="flex justify-between font-bold text-slate-900 text-[11.5px]">
                         <span>${exp.role} — <span class="text-sky-700 font-semibold">${exp.company}</span></span>
                         <span class="text-slate-500 text-[11px]">${exp.period}</span>
@@ -285,7 +285,7 @@ const VUO_RESUMEMAKER = {
             ` : ''}
 
             <!-- Skills & Certifications -->
-            <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-2 gap-4 mt-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
               <div>
                 <h2 class="text-xs font-black uppercase text-sky-800 tracking-wider bg-sky-50 px-2 py-1 rounded border-l-4 border-sky-600">Key Skills</h2>
                 <div class="flex flex-wrap gap-1.5 mt-2">
@@ -301,7 +301,7 @@ const VUO_RESUMEMAKER = {
             </div>
 
             <!-- Personal Profile -->
-            <div class="mt-4">
+            <div class="mt-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
               <h2 class="text-xs font-black uppercase text-sky-800 tracking-wider bg-sky-50 px-2 py-1 rounded border-l-4 border-sky-600">Personal Details</h2>
               <div class="grid grid-cols-2 gap-x-6 gap-y-1 mt-2 text-[11px] text-slate-700">
                 <div><strong>Father's Name:</strong> ${father}</div>
@@ -313,7 +313,7 @@ const VUO_RESUMEMAKER = {
           </div>
 
           <!-- Declaration -->
-          <div class="mt-6 pt-3 border-t border-slate-200">
+          <div class="mt-6 pt-3 border-t border-slate-200 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
             <p class="text-[10px] text-slate-500 italic">I hereby declare that all the information provided above is true and authentic to the best of my knowledge.</p>
             <div class="flex justify-between items-end mt-4 text-[11px]">
               <div>
@@ -334,19 +334,19 @@ const VUO_RESUMEMAKER = {
       previewContainer.innerHTML = `
         <div class="p-8 text-slate-900 font-serif text-xs bg-white min-h-[950px] flex flex-col justify-between">
           <div>
-            <div class="text-center border-b pb-3 mb-4">
+            <div class="text-center border-b pb-3 mb-4 resume-section" style="break-inside: avoid; page-break-inside: avoid;">
               <h1 class="text-xl font-bold tracking-wide uppercase">CURRICULUM VITAE</h1>
               <h2 class="text-lg font-bold text-slate-800 mt-1">${name}</h2>
               <p class="text-[11px] text-slate-600">${address} | Mob: ${phone} | Email: ${email}</p>
             </div>
 
             <div class="space-y-4">
-              <div>
+              <div class="resume-section" style="break-inside: avoid; page-break-inside: avoid;">
                 <h3 class="font-bold text-xs uppercase border-b border-slate-300 pb-0.5">Career Objective</h3>
                 <p class="mt-1 text-[11px] leading-relaxed text-slate-700">${objective}</p>
               </div>
 
-              <div>
+              <div class="resume-section" style="break-inside: avoid; page-break-inside: avoid;">
                 <h3 class="font-bold text-xs uppercase border-b border-slate-300 pb-0.5">Academic Credentials</h3>
                 <table class="w-full mt-1 text-left border text-[11px]">
                   <tr class="bg-slate-100 font-bold">
@@ -366,12 +366,12 @@ const VUO_RESUMEMAKER = {
                 </table>
               </div>
 
-              <div>
+              <div class="resume-section" style="break-inside: avoid; page-break-inside: avoid;">
                 <h3 class="font-bold text-xs uppercase border-b border-slate-300 pb-0.5">Technical & Professional Skills</h3>
                 <p class="mt-1 text-[11px] text-slate-700">${skills.join(', ')}</p>
               </div>
 
-              <div>
+              <div class="resume-section" style="break-inside: avoid; page-break-inside: avoid;">
                 <h3 class="font-bold text-xs uppercase border-b border-slate-300 pb-0.5">Personal Details</h3>
                 <div class="grid grid-cols-2 gap-2 mt-1 text-[11px]">
                   <div>Father's Name: ${father}</div>
@@ -383,7 +383,7 @@ const VUO_RESUMEMAKER = {
             </div>
           </div>
 
-          <div class="mt-6 pt-2 border-t text-[11px]">
+          <div class="mt-6 pt-2 border-t text-[11px] resume-section" style="break-inside: avoid; page-break-inside: avoid;">
             <p class="text-[10px] text-slate-600">Declaration: The above particulars are correct to the best of my knowledge.</p>
             <div class="flex justify-between items-end mt-4">
               <div>
@@ -402,25 +402,151 @@ const VUO_RESUMEMAKER = {
   },
 
   printResume() {
-    window.print();
+    const el = document.getElementById('resumeA4Preview');
+    if (!el) return;
+
+    const printWin = window.open('', '_blank');
+    if (!printWin) {
+      showToast("Please allow popups in your browser to print directly.", "warning");
+      return;
+    }
+
+    const name = document.getElementById('resFullName')?.value || 'Resume';
+    const resumeHtml = el.innerHTML;
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>Resume - ${name}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 15mm 18mm 15mm 18mm;
+          }
+          * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          body {
+            background: #ffffff;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          }
+          .resume-print-root {
+            width: 100%;
+            max-width: 180mm;
+            margin: 0 auto;
+            padding: 5mm 0;
+          }
+          .resume-section {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 14px;
+          }
+          table {
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+          @media screen {
+            body {
+              padding: 25px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="resume-print-root">
+          ${resumeHtml}
+        </div>
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+              window.close();
+            }, 350);
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
   },
 
   downloadPdf() {
     const el = document.getElementById('resumeA4Preview');
-    if (!el || !window.html2canvas || !window.jspdf) return;
+    if (!el || !window.html2canvas || !window.jspdf) {
+      showToast("PDF generator library loading, please try again in a moment.", "info");
+      return;
+    }
 
-    showToast("Generating Print-Ready Resume PDF...", "info");
-    html2canvas(el, { scale: 2, useCORS: true }).then(canvas => {
-      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+    showToast("Generating Multi-Page Resume PDF with Margins...", "info");
+
+    html2canvas(el, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      scrollY: 0,
+      windowWidth: el.scrollWidth,
+      windowHeight: el.scrollHeight
+    }).then(canvas => {
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdf = new jsPDF('p', 'mm', 'a4'); // A4 is 210 x 297 mm
+      
+      // Professional Margins on ALL 4 sides of every page:
+      const marginX = 12; // 12mm Left & Right Margin
+      const marginTop = 15; // 15mm Top Margin
+      const marginBottom = 15; // 15mm Bottom Margin
 
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      const pdfPageWidth = 210;
+      const pdfPageHeight = 297;
+      const printableWidth = pdfPageWidth - (2 * marginX); // 186mm
+      const printableHeight = pdfPageHeight - marginTop - marginBottom; // 267mm
+
+      const canvasWidth = canvas.width;
+      const sliceHeightPx = Math.floor(canvasWidth * (printableHeight / printableWidth));
+      const totalSlices = Math.ceil(canvas.height / sliceHeightPx);
+
+      for (let i = 0; i < totalSlices; i++) {
+        const sourceY = i * sliceHeightPx;
+        const currentSliceHeight = Math.min(sliceHeightPx, canvas.height - sourceY);
+
+        if (currentSliceHeight <= 5) break;
+
+        // Create isolated slice canvas for this specific page
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = canvasWidth;
+        sliceCanvas.height = currentSliceHeight;
+        const sliceCtx = sliceCanvas.getContext('2d');
+
+        // White page background
+        sliceCtx.fillStyle = '#ffffff';
+        sliceCtx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+        sliceCtx.drawImage(canvas, 0, sourceY, canvasWidth, currentSliceHeight, 0, 0, canvasWidth, currentSliceHeight);
+
+        const sliceImgData = sliceCanvas.toDataURL('image/jpeg', 0.98);
+        const drawnHeightMm = (currentSliceHeight * printableWidth) / canvasWidth;
+
+        if (i > 0) {
+          pdf.addPage('a4', 'p');
+        }
+
+        // Draw slice with precise top, bottom and side margins
+        pdf.addImage(sliceImgData, 'JPEG', marginX, marginTop, printableWidth, drawnHeightMm);
+      }
+
       const name = document.getElementById('resFullName')?.value || 'Resume';
-      pdf.save(`Resume_${name.replace(/\s+/g, '_')}.pdf`);
-      showToast("Resume PDF downloaded successfully!", "success");
+      const cleanName = name.trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+      pdf.save(`Resume_${cleanName}.pdf`);
+      showToast("Resume PDF downloaded with 15mm bottom & top margins!", "success");
+    }).catch(err => {
+      console.error(err);
+      showToast("Error generating PDF. Please use the Print A4 button.", "error");
     });
   }
 };

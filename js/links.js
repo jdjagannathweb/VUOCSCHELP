@@ -43,7 +43,16 @@ const VUO_LINKS = {
   getAllLinks() {
     try {
       const stored = localStorage.getItem('vuo_links');
-      return stored ? JSON.parse(stored) : VUO_DATA.links;
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Refresh cache if it contains less than 50 links
+        if (Array.isArray(parsed) && parsed.length < 50) {
+          localStorage.setItem('vuo_links', JSON.stringify(VUO_DATA.links));
+          return VUO_DATA.links;
+        }
+        return parsed;
+      }
+      return VUO_DATA.links;
     } catch (e) {
       return VUO_DATA.links;
     }
@@ -76,7 +85,8 @@ const VUO_LINKS = {
         l.title.toLowerCase().includes(this.searchQuery) ||
         (l.titleOdia && l.titleOdia.toLowerCase().includes(this.searchQuery)) ||
         (l.desc && l.desc.toLowerCase().includes(this.searchQuery)) ||
-        l.categoryName.toLowerCase().includes(this.searchQuery)
+        (l.categoryName && l.categoryName.toLowerCase().includes(this.searchQuery)) ||
+        l.url.toLowerCase().includes(this.searchQuery)
       );
     }
 
@@ -85,7 +95,7 @@ const VUO_LINKS = {
         <div class="col-span-full py-12 text-center text-slate-500">
           <svg class="w-12 h-12 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <p class="font-semibold text-slate-600">No portal links found matching your search.</p>
-          <p class="text-xs text-slate-400 mt-1">Try searching for "Subhadra", "e-District", "PAN", "DigiPay" or "Bhulekh".</p>
+          <p class="text-xs text-slate-400 mt-1">Try searching for "Subhadra", "e-District", "PAN", "DigiPay", "Aadhaar" or "ChatGPT".</p>
         </div>
       `;
       return;
@@ -95,7 +105,10 @@ const VUO_LINKS = {
       const title = currentLanguage === 'or' && link.titleOdia ? link.titleOdia : link.title;
       const categoryBadge = link.category === 'gov' ? 'bg-amber-100 text-amber-800' :
                             link.category === 'csc' ? 'bg-sky-100 text-sky-800' :
-                            link.category === 'banking' ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800';
+                            link.category === 'banking' ? 'bg-emerald-100 text-emerald-800' :
+                            link.category === 'jobs' ? 'bg-indigo-100 text-indigo-800' :
+                            link.category === 'ai_tools' ? 'bg-fuchsia-100 text-fuchsia-800' :
+                            link.category === 'citizen' ? 'bg-teal-100 text-teal-800' : 'bg-purple-100 text-purple-800';
 
       return `
         <div class="feature-card bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md flex flex-col justify-between relative overflow-hidden group">

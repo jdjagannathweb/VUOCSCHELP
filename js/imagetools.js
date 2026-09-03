@@ -24,6 +24,7 @@ const VUO_IMAGETOOLS = {
     // File drop & inputs for each subtool
     this.setupDropZone('compressDropZone', 'compressFileInput', (file) => this.handleCompressFile(file));
     this.setupDropZone('resizeDropZone', 'resizeFileInput', (file) => this.handleResizeFile(file));
+    this.setupDropZone('enhanceDropZone', 'enhanceFileInput', (file) => this.handleEnhancerFile(file));
     this.setupDropZone('convertDropZone', 'convertFileInput', (file) => this.handleConvertFile(file));
     this.setupDropZone('cropDropZone', 'cropFileInput', (file) => this.handleCropFile(file));
     this.setupDropZone('sigDropZone', 'sigFileInput', (file) => this.handleSigFile(file));
@@ -225,6 +226,128 @@ const VUO_IMAGETOOLS = {
     link.href = this._resizedDataUrl;
     link.click();
     showToast("Resized image downloaded!", "success");
+  },
+
+  // ---------------- 3. PHOTO ENHANCER, SHARPENER & UPSCALER ---------------- //
+  handleEnhancerFile(file) {
+    this.uploadedFiles.enhance = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        this._enhanceImg = img;
+        document.getElementById('enhanceOrigImg').src = e.target.result;
+        document.getElementById('enhanceOrigDim').textContent = `${img.naturalWidth} x ${img.naturalHeight} px`;
+        document.getElementById('enhanceOrigSize').textContent = `${(file.size / 1024).toFixed(1)} KB`;
+        document.getElementById('enhanceWorkspace').classList.remove('hidden');
+        document.getElementById('enhanceDropZone').classList.add('hidden');
+        this.processEnhancer();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  onEnhanceSliderChange() {
+    const val = document.getElementById('enhanceSharpness').value;
+    document.getElementById('enhanceSharpnessVal').textContent = `${val}%`;
+    this.processEnhancer();
+  },
+
+  processEnhancer() {
+    if (!this._enhanceImg) return;
+
+    const autoTone = document.getElementById('enhanceAutoTone').checked;
+    const sharpness = parseInt(document.getElementById('enhanceSharpness').value, 10) || 0;
+    const upscaleFactor = parseInt(document.getElementById('enhanceUpscale').value, 10) || 1;
+
+    const srcW = this._enhanceImg.naturalWidth;
+    const srcH = this._enhanceImg.naturalHeight;
+    const targetW = srcW * upscaleFactor;
+    const targetH = srcH * upscaleFactor;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+
+    // High quality bicubic upscaling
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(this._enhanceImg, 0, 0, targetW, targetH);
+
+    const imgData = ctx.getImageData(0, 0, targetW, targetH);
+    const data = imgData.data;
+
+    // 1. Dynamic Auto-Tone Equalization
+    if (autoTone) {
+      let minLum = 255, maxLum = 0;
+      for (let i = 0; i < data.length; i += 16) {
+        const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        if (lum < minLum) minLum = lum;
+        if (lum > maxLum) maxLum = lum;
+      }
+      minLum = Math.max(0, minLum - 10);
+      maxLum = Math.min(255, maxLum + 10);
+      const range = Math.max(1, maxLum - minLum);
+
+      for (let i = 0; i < data.length; i += 4) {
+        for (let c = 0; c < 3; c++) {
+          let val = ((data[i + c] - minLum) / range) * 255;
+          val = val < 128 ? (2 * val * val) / 255 : 255 - (2 * (255 - val) * (255 - val)) / 255;
+          data[i + c] = Math.max(0, Math.min(255, val));
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    // 2. Convolution Sharpening Mask
+    if (sharpness > 0) {
+      const src = ctx.getImageData(0, 0, targetW, targetH).data;
+      const output = ctx.createImageData(targetW, targetH);
+      const dst = output.data;
+      const k = (sharpness / 100) * 0.8;
+
+      for (let y = 0; y < targetH; y++) {
+        for (let x = 0; x < targetW; x++) {
+          const idx = (y * targetW + x) * 4;
+          if (x === 0 || x === targetW - 1 || y === 0 || y === targetH - 1) {
+            dst[idx] = src[idx];
+            dst[idx + 1] = src[idx + 1];
+            dst[idx + 2] = src[idx + 2];
+            dst[idx + 3] = src[idx + 3];
+            continue;
+          }
+
+          const top = ((y - 1) * targetW + x) * 4;
+          const bot = ((y + 1) * targetW + x) * 4;
+          const left = (y * targetW + (x - 1)) * 4;
+          const right = (y * targetW + (x + 1)) * 4;
+
+          for (let c = 0; c < 3; c++) {
+            const val = src[idx + c] * (1 + 4 * k) - (src[top + c] + src[bot + c] + src[left + c] + src[right + c]) * k;
+            dst[idx + c] = Math.max(0, Math.min(255, val));
+          }
+          dst[idx + 3] = src[idx + 3];
+        }
+      }
+      ctx.putImageData(output, 0, 0);
+    }
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+    document.getElementById('enhanceResultImg').src = dataUrl;
+    document.getElementById('enhanceNewDim').textContent = `${targetW} x ${targetH} px`;
+    document.getElementById('enhanceNewSize').textContent = `${((dataUrl.length * 3 / 4) / 1024).toFixed(1)} KB`;
+    this._enhancedDataUrl = dataUrl;
+  },
+
+  downloadEnhanced() {
+    if (!this._enhancedDataUrl) return;
+    const link = document.createElement('a');
+    link.download = `VUO_Enhanced_HQ_${Date.now()}.jpg`;
+    link.href = this._enhancedDataUrl;
+    link.click();
+    showToast("Enhanced HD photo downloaded!", "success");
   },
 
   // ---------------- 3. FORMAT CONVERTER ---------------- //
